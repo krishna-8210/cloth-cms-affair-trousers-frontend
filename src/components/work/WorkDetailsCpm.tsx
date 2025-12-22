@@ -17,7 +17,7 @@ function WorkDetailsCpm({ work_data, n }: any) {
         onOpen()
     }
     console.log(work_data)
-    const data = work_data.details;
+    const data = work_data;
     const status = work_data.status;
 
     

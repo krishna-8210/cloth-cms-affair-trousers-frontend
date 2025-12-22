@@ -24,14 +24,12 @@ const MainForm = () => {
     if (selected_role_index) {
       data.selected_worker_role = worker_role_list.list[selected_role_index];
     }
-    console.log(data)
-
-
+    console.log(data);
     const resp = await responseHandler(worker_api_service.create, { data: data, id: '', query: '' }, { toast_display: true });
-    dispatch(worker_list_update_reducer([...pre_worker_list_slice, resp.data]));
+    const data_reducer:any=[...pre_worker_list_slice, resp.data];
+    dispatch(worker_list_update_reducer(data_reducer));
     console.log(resp);
   }
-
 
 
   const worker_list_update_handler = (list: []) => {
