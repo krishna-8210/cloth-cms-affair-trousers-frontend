@@ -24,7 +24,9 @@ function WorkerDetails_render({ data }: any) {
                 <span>{role.title}</span>
             </div>
             <div>
-            
+            <div className='w-full border w-full p-5 rounded-xl border-default mt-2'>
+                <div>Avaliable Balance: {data?.balance_amount} rs</div>
+            </div>
             </div>
         </CardBody>
 

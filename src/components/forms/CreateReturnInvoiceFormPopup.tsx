@@ -1,0 +1,39 @@
+import React, { useState } from 'react'
+import ModalPopup from '../themes/ModalPopup'
+import FormUi from '../ui/FormUi'
+import { Input } from '@heroui/input'
+import InvoiceForm from './InvoiceForm'
+import ReturnInvoiceForm from './ReturnInvoiceForm'
+
+const MainForm = () => {
+const [first, setfirst] = useState('second')
+const submit_handler=(e:any)=>{
+    console.log(e.data)
+    setfirst('')
+}
+
+ const [value, setValue] = useState("");
+
+  const submit2 = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    console.log(value); // submitted data
+
+    setValue(""); // ✅ clears input
+  };
+
+    return <div className='w-full h-[90vh] overflow-scroll '>
+<ReturnInvoiceForm/>
+
+    </div>
+}
+
+function CreateReturnInvoiceFormPopup() {
+    return (
+        <ModalPopup size={'full'} modal_title='Create Return Invoice' button_title='+ Return'>
+            <MainForm />
+        </ModalPopup>
+    )
+}
+
+export default CreateReturnInvoiceFormPopup

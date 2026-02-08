@@ -6,13 +6,14 @@ import { Input } from '@heroui/input'
 import { InputOtp, Select, SelectItem } from '@heroui/react'
 import { responseHandler } from '@/libs/api_handle'
 import { work_api_service } from '@/services/mixServices'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { work_list_update_reducer } from '@/redux/DatalistSlice'
 
 
 const MainForm = () => {
   const [range, setRange] = useState({ series: '', price: '' });
     const dispatch=useDispatch();
+      const pre_work_list_slice = useSelector((e: any) => e?.datalist_slice?.work?.list);
   const submit_handler = async (data: any) => {
 
   try {
@@ -21,7 +22,8 @@ const MainForm = () => {
      
     if(resp.status){
       const obj:any={...resp.data?.work,details:{...resp.data?.details}};
-    dispatch(work_list_update_reducer([obj]))
+const data_reducer:any=[obj,...pre_work_list_slice];
+    dispatch(work_list_update_reducer(data_reducer));
     }
      } 
     catch (error) {

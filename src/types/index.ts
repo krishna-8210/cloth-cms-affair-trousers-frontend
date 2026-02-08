@@ -28,3 +28,8 @@ export type datalist_type = {
   status: 'loaded' | 'loading',
   loading:boolean
 }
+export type dataDetails_type = {
+  data: any | null,
+  status: 'loaded' | 'loading',
+  loading:boolean
+}

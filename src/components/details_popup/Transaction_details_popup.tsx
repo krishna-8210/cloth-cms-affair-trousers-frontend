@@ -19,6 +19,7 @@ import {
   Divider,
   Chip
 } from "@heroui/react";
+import CreditDebitChip from '../CreditDebitChip'
 
 const TransactionDetails = ({ transaction }:any) => {
   if (!transaction) return null;
@@ -37,13 +38,14 @@ const TransactionDetails = ({ transaction }:any) => {
       {/* Type */}
       <div className="flex justify-between items-center">
         <span className="text-sm text-default-500">Type</span>
-        <Chip
+        {/* <Chip
           size="sm"
           color={transaction.transaction_type === "credit" ? "success" : "danger"}
           variant="flat"
         >
           {transaction.transaction_type.toUpperCase()}
-        </Chip>
+        </Chip> */}
+        <CreditDebitChip transaction_type={transaction.transaction_type} />
       </div>
 
       {/* Amount */}
@@ -61,7 +63,13 @@ const TransactionDetails = ({ transaction }:any) => {
           {transaction.notes || "-"}
         </span>
       </div>
-
+{/* System Commenet */}
+      <div className="flex justify-between">
+        <span className="text-sm text-default-500">System Comment</span>
+        <span className=" text-xs">
+          {transaction.system_comment}
+        </span>
+      </div>
       <Divider />
 
       {/* Beneficiary */}
@@ -87,6 +95,7 @@ const TransactionDetails = ({ transaction }:any) => {
         </span>
       </div>
 
+  
       <Divider />
 
       {/* Dates */}

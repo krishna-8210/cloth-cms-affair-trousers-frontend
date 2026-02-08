@@ -8,9 +8,9 @@ import Axios from "axios"
 const presetApi = (route: string) => {
     return {
         create: async (data: api_arg_type) => await Axios.post(baseurl + '/' + route, data.data, { headers: headerFunctions() }),
-        list: async (data: api_arg_type) => await Axios.get(baseurl + '/' + route, { headers: headerFunctions() }),
+        list: async (data: api_arg_type) => await Axios.get(baseurl + '/' + route + '?' + data.query, { headers: headerFunctions() }),
         details: async (data: api_arg_type) => await Axios.get(baseurl + '/' + route + '/' + data.id, { headers: headerFunctions() }),
-        update: async (data: api_arg_type) => await Axios.put(baseurl + '/' + route + '/', +data.id, { headers: headerFunctions() }),
+        update: async (data: api_arg_type) => await Axios.put(baseurl + '/' + route + '/' + data.id, data.data, { headers: headerFunctions() }),
         delete: async (data: api_arg_type) => await Axios.delete(baseurl + '/' + route + '/' + data.id, { headers: headerFunctions() }),
     }
 }
@@ -41,12 +41,48 @@ export const worker_transction_api_service = {
 }
 
 export const work_status_record_api_service = {//action like assign,submission and complete action handle by this
-    ...presetApi('work_status_recored')
+    ...presetApi('work_status_recored'),
+    work_status_list: async (data: api_arg_type) => await Axios.get(baseurl + '/work_status_recored/list/work/' + data.id, { headers: headerFunctions() }),
+    submitted_work_status_list: async (data: api_arg_type) => await Axios.get(baseurl + '/work_status_recored/work/submitted/' + data.id, { headers: headerFunctions() }),
+    worker_work_list: async (data: api_arg_type) => await Axios.get(baseurl + '/work_status_recored/worker_work_list/' + data.id, { headers: headerFunctions() }),
+    update_work_worker_unit_rate: async (data: api_arg_type) => await Axios.put(baseurl + '/work_status_recored/update_work_worker_unit_rate/' + data.id, data.data, { headers: headerFunctions() }),
 }
 
+// inventry
+export const inventry_api_service = {
+    ...presetApi('inventry'),
+    details_via_range: async (data: api_arg_type) => await Axios.get(baseurl + '/inventry/details_via_range/' + data.id, { headers: headerFunctions() }),
+    inventry_record_list: async (data: api_arg_type) => await Axios.get(baseurl + '/inventry/record/' + data.id + '?' + data.query, { headers: headerFunctions() }),
+}
+
+
+
+//customers
+export const customer_api_service = {
+    ...presetApi('customer'),
+    credit_balance: async (data: api_arg_type) => await Axios.post(baseurl + '/customer/credit_amount', data.data, { headers: headerFunctions() }),
+}
+
+
+//invoice
+export const invoice_api_service = {
+    ...presetApi('invoice'),
+    pdf_download: async (data: api_arg_type) => await Axios.get(baseurl + '/invoice/pdf/' + data.id, { headers: headerFunctions(),responseType:'blob' }),
+}
+
+//agent
+export const agent_api_service = {
+    ...presetApi('agent')
+}
+export const color_api_service = {
+    ...presetApi('color')
+}
+export const transaction_api_service = {
+    transaction_list_via_id: async (data: api_arg_type) => await Axios.get(baseurl + '/transaction/list/' + data.id, { headers: headerFunctions() }),
+}
 // export const signupService = async ({ email, password, name, mobile }) => {
 //     console.log('signupService')
-//     const resp = await Axios.post(baseurl + "/auth/signup", {
+//     const resp = await Axios.post(baseurl x+ "/auth/signup", {
 //         email, password, name, mobile
 //     })
 //     return resp

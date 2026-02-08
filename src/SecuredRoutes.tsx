@@ -5,41 +5,53 @@ import WorksDefaultPage from "./pages/Works/WorksDefaultPage";
 import CreateWorksForm from "./components/forms/CreateWorksForm";
 import WorkerDefaultPage from "./pages/Workers/WorkerDefaultPage";
 import CreateWorkerForm from "./components/forms/CreateWorkerForm";
-import TestForm from "./components/forms/TestForm";
 import InventryDefaultPage from "./pages/Inventry/InventryDefaultPage";
-import CreateProduct_form_popup from "./components/forms/CreateProduct_form_popup";
 import WorkDetailsViewPage from "./pages/Works/WorkDetailsViewPage";
 import CreateWorkerRoles from "./components/forms/CreateWorkerRoles";
 import WorkerDetailsPage from "./pages/Workers/WorkerDetailsPage";
 import WorkerTransactionPage from "./pages/Workers/WorkerTransactionPage";
+import InventryDetailsViewPage from "./pages/Inventry/InventryDetailsViewPage";
+import CreateCustomerFormPopup from "./components/forms/customer/CreateCustomerFormPopup";
+import CreateAgentFormPopup from "./components/forms/CreateAgentFormPopup";
+import CreateInvoiceFormPopup from "./components/forms/CreateInvoiceFormPopup";
+import CustomerDefaultPage from "./pages/customers/CustomerDefaultPage";
+import CustomerDetailsPage from "./pages/customers/CustomerDetailsPage";
+import AgentDefaultPage from "./pages/agents/AgentDefaultPage";
+import AgentDetailsPage from "./pages/agents/AgentDetailsPage";
+import InvoiceDefaultPages from "./pages/invoice/InvoiceDefaultPages";
+import InvoiceDetailsPage from "./pages/invoice/InvoiceDetailsPage";
+import BarcodeGenerateForm from "./components/forms/BarcodeGenerateForm";
+import CustomerTransactionListPage from "./pages/customers/CustomerTransactionListPage";
+import CreateColorFormPopup from "./components/forms/CreateColorFormPopup";
+import CreateReturnInvoiceFormPopup from "./components/forms/CreateReturnInvoiceFormPopup";
+import InventryListPage from "./pages/Inventry/InventryListPage";
+
 
 
 function SecuredRoutes() {
 
-
-
   return (
     <>
-
       <Routes>
-
         <Route element={<MainLayout topnavItems={[]} title={"Home"} />} path="/" >
           <Route element={<div>home</div>} index />
           <Route element={<div>Create Product Page</div>} path="create" />
           <Route element={<div>Product List Page</div>} path="list" />
         </Route>
-
         <Route element={<MainLayout
           title={"Works"}
           topnavItems={[
             { id: 1, link: 'create', label: "Create Product", type: 'button' },
-            { id: 2, label: '', link: 'list', type: 'popup', element: <CreateWorksForm /> }]
+            { id: 2, label: '', link: 'list', type: 'popup', element: <CreateWorksForm /> },
+            { id: 3, label: '', link: 'list', type: 'popup', element: <CreateColorFormPopup /> }
+          
+          
+          ]
           }
         />} path="/works"
-
         >
           <Route element={<WorksDefaultPage />} index />
-           <Route element={<WorkDetailsViewPage />} path=":work_id" />
+          <Route element={<WorkDetailsViewPage />} path=":work_id" />
         </Route>
         <Route element={<MainLayout
           title={"Worker"}
@@ -50,23 +62,51 @@ function SecuredRoutes() {
           ]
           }
         />} path="/workers"
-
         >
-          <Route element={<WorkerDefaultPage />} index />
-         <Route element={<WorkerDetailsPage />} path=":worker_id" />
+          <Route element={<WorkerDefaultPage />} index />     
+          <Route element={<WorkerDetailsPage />} path=":worker_id" />
           <Route element={<WorkerTransactionPage />} path=":worker_id/transactions" />
         </Route>
         <Route element={<MainLayout
           title={"Inventry"}
-          topnavItems={[
-
-            { id: 2, label: '', link: 'list', type: 'popup', element: <CreateProduct_form_popup /> },
-
-          ]
-          }
+          topnavItems={[]}
         />} path="/inventry"
         >
           <Route element={<InventryDefaultPage />} index />
+          <Route path=":inventry_id" element={<InventryDetailsViewPage />} />
+          <Route path=":inventry_id/inventry-record-list" element={<InventryListPage />} />
+        </Route>
+        <Route element={<MainLayout
+          title={"Customers"}
+          topnavItems={[
+            { id: 1, label: '', link: 'list', type: 'popup', element: <CreateCustomerFormPopup /> },
+                 { id: 1, label: '', link: 'list', type: 'popup', element: <BarcodeGenerateForm /> },
+          ]}
+        />} path="/customers"
+        >
+          <Route element={<CustomerDefaultPage />} index />
+          <Route path=":customer_id" element={<CustomerDetailsPage />} />
+          <Route element={<CustomerTransactionListPage />} path=":customer_id/transactions" />
+        </Route>
+        <Route element={<MainLayout
+          title={"Agent"}
+          topnavItems={[
+            { id: 1, label: '', link: 'list', type: 'popup', element: <CreateAgentFormPopup /> },
+          ]}
+        />} path="/agent" >
+          <Route element={<AgentDefaultPage />} index />
+          <Route path=":agent_id" element={<AgentDetailsPage />} />
+        </Route>
+        {/* invoices */}
+        <Route element={<MainLayout
+          title={"Invoices"}
+          topnavItems={[
+            { id: 1, label: '', link: 'list', type: 'popup', element: <CreateInvoiceFormPopup /> },
+            { id: 2, label: '', link: 'list', type: 'popup', element: <CreateReturnInvoiceFormPopup /> },
+          ]}
+        />} path="/invoices" >
+          <Route element={<InvoiceDefaultPages />} index />
+          <Route path=":invoice_id" element={<InvoiceDetailsPage />} />
         </Route>
         {/* 
 

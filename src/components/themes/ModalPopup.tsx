@@ -8,12 +8,12 @@ import {
   useDisclosure,
 } from "@heroui/react";
 
-export default function ModalPopup({onClosePopup,button_classname='', button_title, modal_title, children,btn_size='sm', size = 'sm', button_color = 'primary' }:any) {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
+export default function ModalPopup({onClosePopup=()=>{},button_classname='', button_title, modal_title, children,btn_size='sm', size = 'sm', button_color = 'primary' }:any) {
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+  
   return (
     <>
-      <Button className={button_classname} color={button_color} size={btn_size} onPress={onOpen}>{button_title}</Button>
+      <Button  className={button_classname} color={button_color} size={btn_size} onPress={onOpen}>{button_title}</Button>
       <Modal  size={size} isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
@@ -27,7 +27,7 @@ export default function ModalPopup({onClosePopup,button_classname='', button_tit
               </ModalBody>
               <ModalFooter>
                 <Button  color="danger" variant="light" onPress={() => {
-                  onClosePopup()
+                  onClosePopup(onClose)
                   onClose()
                   
                 }}>

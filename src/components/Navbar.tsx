@@ -80,7 +80,7 @@ export default function Navbar({ navOpen, setNavOpen }: any) {
     { id: "", title: "Workers", tooltip: "", route: "/workers", icon: "Wr" },
     { id: "", title: "Inventry", tooltip: "", route: "/inventry", icon: "In" },
     // { id: "", title: "Invoice", tooltip: "", route: "/invoice", icon: "Gr" },
-     { id: "", title: "Sales", tooltip: "", route: "/sales", icon: "Sl" },
+     { id: "", title: "Invoices", tooltip: "", route: "/Invoices", icon: "Iv" },
     { id: "", title: "Customers", tooltip: "", route: "/customers", icon: "Cm" },
     { id: "", title: "Agent", tooltip: "", route: "/agent", icon: "Ag" },
    

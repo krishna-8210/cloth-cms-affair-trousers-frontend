@@ -19,13 +19,24 @@ function WorkDetailsCpm({ work_data, n }: any) {
     console.log(work_data)
     const data = work_data;
     const status = work_data.status;
+    const action_options = (work_status: string) => {
+        if (work_status == 'initiated') {
+            return ['assign']
+        }
+        if (work_status == 'assigned') {
+            return ['submission']
+        }
+        if (work_status == 'submitted') {
+            return ['assign', 'completed']
+        }
+    }
+    const action_option_list: any = action_options(status.current_status);
 
-    
-    return <Card aria-labelledby={'sdcs' + n} className='border border-default w-full min-h-32 '>
-        <CardBody>
+    return <Card aria-labelledby={'sdcs' + n} className={`border border-default w-full min-h-48 h-72 `}>
+        <CardBody >
             <div>
-                <span>Name :</span>
-                <span>{data.name}</span>
+                <span>Work Name :</span>
+                <span>{work_data?.details?.name}</span>
             </div>
             <div>
                 <span>Lot Number :</span>
@@ -33,30 +44,39 @@ function WorkDetailsCpm({ work_data, n }: any) {
             </div>
             <div>
                 <span>Quantity :</span>
-                <span>{status.final_quantity}</span>
+                <span>{status?.final_quantity}</span>
             </div>
-            <div>
-                <span>Current status : </span>
-                <Chip className='capitalize'>{status.current_status}</Chip>
-            </div>
+            {work_data.is_completed ?
+                <div>
+                    <span>Current status : </span>
+                    <Chip color='success' className='capitalize'>{'Completed'}</Chip>
+                </div>
+                :
+                <div>
+                    <span>Current status : </span>
+                    <Chip className='capitalize'>{status?.current_status}</Chip>
+                </div>
+
+            }
+
             <div>
                 <span>Range :</span>
-                <span>{data.range}</span>
+                <span>{data?.details?.range}</span>
             </div>
             <div>
                 <span>Selling Price :</span>
-                <span>{data.selling_price}</span>
+                <span>{data?.details?.selling_price}</span>
             </div>
             <div>
                 <span>Series :</span>
-                <span>{data.series}</span>
+                <span>{data?.details?.series}</span>
             </div>
 
         </CardBody>
 
         <CardFooter className='flex justify-end items-end gap-2'>
 
-            <div>
+            {!work_data.is_completed && <div>
                 <span>Action</span>
                 <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
                     <ModalContent>
@@ -82,14 +102,17 @@ function WorkDetailsCpm({ work_data, n }: any) {
                     <Select aria-label='scs' onChange={action_handler} size='sm' className='w-32'>
 
                         {/* <SelectItem  key='initiated' > Initiated</SelectItem> */}
-                        <SelectItem key='assigned' >Assign</SelectItem>
+                        {/* <SelectItem key='assign' >Assign</SelectItem>
                         <SelectItem key={'submission'}>Submission</SelectItem>
-                        <SelectItem key={'completed'}>Completed</SelectItem>
+                        <SelectItem key={'completed'}>Completed</SelectItem> */}
+                        {action_option_list.map((e: any) => {
+                            return <SelectItem key={e} >{e}</SelectItem>
+                        })}
                     </Select>
                 </span>
 
-            </div>
-           
+            </div>}
+
         </CardFooter>
     </Card>
 }

@@ -7,10 +7,8 @@
 
  */
 
-import { close } from "fs";
-import MessagePopup from "../components/MessagePopup";
+
 import { custom_add_toast } from "@/components/ui/CustomToast";
-import { toast } from "@heroui/theme";
 import { api_arg_type } from "@/types";
 
 
@@ -38,13 +36,15 @@ export const api_manager = async (apiService, arg, checkStatus, isAlert, message
 
     }
     else {
-      message.info('Click on menu item.');
+      console.log('error')
+      
       // alert(resp.data.message)
       return { statusCode: resp.status, error: true, message: resp.data.message }
     }
 
 
   } catch (error) {
+     console.log('error')
     // alert(error.response.data.message);
     if (isAlert === true) {
       if (message) {
@@ -66,7 +66,7 @@ export const api_manager_v2 = async (apiService, arg) => {
   try {
     // body-body that needed when pass api
     const resp = await apiService(arg)
-    console.log(resp, "gfhvgjkjl;l")
+    console.log(resp, "api_manager_v2()")
     if (resp.data.status == true) {
       return { statusCode: resp.status, status: true, data: resp.data.data, message: resp.data.message, resp };
     }
@@ -84,7 +84,7 @@ export const api_manager_v2 = async (apiService, arg) => {
     console.log(error)
     console.log(error.message, "(internal error)");
     if (error?.response?.data?.status == 'warn') {
-       console.log("error?.response?.data?.status == 'warn'")
+      console.log("error?.response?.data?.status == 'warn'")
       return { statusCode: error.status, status: 'warn', message: error.response.data.message, resp: error }
     }
     else if (error.status <= 400) {
@@ -92,16 +92,16 @@ export const api_manager_v2 = async (apiService, arg) => {
       return { statusCode: error.status, status: false, message: error.response.data.message, resp: error }
     }
     else {
-       console.log('else')
+      console.log('else')
       // alert(resp.data.message)
-      return { statusCode: error.status, status: false, message: error.message, resp: error }
+      return { statusCode: error.status, status: false, message: error.response.data.message, resp: error }
     }
 
   }
 }
 
 
-export const responseHandler = async (apiService: any, arg: api_arg_type ={ data: '', id: '', query: '' }, options = { toast_display: false }) => {
+export const responseHandler = async (apiService: any, arg: api_arg_type = { data: '', id: '', query: '' }, options = { toast_display: false }) => {
   try {
     const response = await api_manager_v2(apiService, arg);
     console.log('response', response);
@@ -126,15 +126,15 @@ export const responseHandler = async (apiService: any, arg: api_arg_type ={ data
 
     }
     else {
-   
+      // const api_resp=
       if (true) {
-           console.log(response, options);
+        console.log(response, options);
         custom_add_toast({
-          title: response.message|| "Failed",
+          title: response.message || "Failed",
           description: "",
           color: "danger"
         });
-           console.log(response, options)
+        console.log(response, options)
       }
     }
 
