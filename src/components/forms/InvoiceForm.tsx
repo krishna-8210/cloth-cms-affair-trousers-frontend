@@ -60,12 +60,11 @@ type shippingType = {
     address3: String,
     pincode: String,
     notes: String,
+    gst_number: String,
 }
 type TransportType = {
-    contact_name: String,
-    contact_mobile: String,
+    name: String,
     charged_amount: String,
-    vehical_number: String,
     notes: String,
 }
 
@@ -147,7 +146,7 @@ export default function InvoiceForm({ is_update_invoice, pre_invoice_details = n
 
     // const addItem = () => setItems([...items, emptyItem]);
     const removeItem = (index: number) =>
-        setItems(items.filter((_:any, i: number) => i !== index));
+        setItems(items.filter((_: any, i: number) => i !== index));
 
     const itemTotal = (item: any) => {
         // const effectiveQty =
@@ -452,7 +451,7 @@ export default function InvoiceForm({ is_update_invoice, pre_invoice_details = n
                     unit_price: e.unit_selling_price,
                     loading: false,
                     color: bardcode_details.color,
-                    inventry_id:e.inventry_id_ref._id
+                    inventry_id: e.inventry_id_ref._id
                 }]
                 )
             })
@@ -695,7 +694,6 @@ export default function InvoiceForm({ is_update_invoice, pre_invoice_details = n
                                                 ₹ {ele.value}
                                             </div>
                                         </div>
-
                                     </div>
                                 )
                             })
@@ -722,7 +720,6 @@ export default function InvoiceForm({ is_update_invoice, pre_invoice_details = n
                         {shipping_details &&
                             <div className="w-96 border border-default-200 rounded-xl p-2 ">
                                 <div className="text-center text-lg ">Shipping Details</div>
-
                                 <br />
                                 <div>Contact name: {shipping_details?.contact_name}</div>
                                 <div>Contact mobile: {shipping_details?.contact_mobile}</div>
@@ -730,16 +727,18 @@ export default function InvoiceForm({ is_update_invoice, pre_invoice_details = n
                                 <div>Address 2: {shipping_details?.address2}</div>
                                 <div>Address 3: {shipping_details?.address3}</div>
                                 <div>Address 3: {shipping_details?.pincode}</div>
+                                <div>GST number: {shipping_details?.gst_number}</div>
+                                <div>Notes: {shipping_details?.notes}</div>
+
                             </div>}
                         {transport_details &&
                             <div className="w-96 border border-default-200 rounded-xl p-2 ">
                                 <div className="text-center text-lg ">Transport Details</div>
 
                                 <br />
-                                <div>Contact Name: {transport_details?.contact_name}</div>
-                                <div>Contact Mobile: {transport_details?.contact_mobile}</div>
+                                <div>Transport Name: {transport_details?.name}</div>
                                 <div>Charged Amount: {transport_details?.charged_amount}</div>
-                                <div>Vehical Number {transport_details?.vehical_number}</div>
+                                <div>Notes {transport_details?.notes}</div>
                             </div>}
 
 

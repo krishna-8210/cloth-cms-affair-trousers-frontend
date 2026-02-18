@@ -5,7 +5,8 @@ import InventryRecordTable from '@/components/tables/InventryRecordTable';
 import { inventry_api_service, work_api_service, work_status_record_api_service } from '@/services/mixServices';
 import DetailsPageTemplate from '@/templates/DetailsPageTemplate';
 
-import { Button, Card, CardBody, CardHeader } from '@heroui/react';
+import { Button, Card, CardBody, CardHeader, Divider } from '@heroui/react';
+import { Divide } from 'lucide-react';
 
 import React, { useEffect, useState } from 'react'
 
@@ -118,18 +119,19 @@ function InventryDetailsViewPage() {
 
             <DetailsPageTemplate setData={set_details} details_api={inventry_api_service.details} id={id} Render_component={InventryDetails_max_render}>
                 <>
-                    <div className='mt-3 flex gap-2'>
+                    <div className='mt-3 flex gap-2 flex-wrap'>
                         {Array.isArray(distrbuted_quantity_arr) && distrbuted_quantity_arr.map((e: any) => {
-                            return <Card className='w-96'>
-                                <CardHeader>Name: {e.name}</CardHeader>
-                                <CardBody>
+                            return <Card className='w-64'>
+                                <CardHeader className='text-lg'>Name: {e.name}</CardHeader>
+                                <CardBody className='text-default-600'>
                                     <div>Key: {e.key}</div>
+
                                     <div>Initial Quantity: 0</div>
+
                                     <div>Avaliable Quantity: {e.quantity}</div>
                                 </CardBody>
                             </Card>
                         })}
-
                     </div>
                     <Card className='mt-3'>
                         <CardHeader className='flex justify-between '>

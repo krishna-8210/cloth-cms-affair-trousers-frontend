@@ -1,7 +1,7 @@
 import { invoice_api_service } from "@/services/mixServices";
 import DetailsPageTemplate from "@/templates/DetailsPageTemplate";
 import { useState } from "react";
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 
 
 const Billing_details_Item = ({ title, details, value, isGrandTotal }: any) => {
@@ -16,12 +16,13 @@ const Hello = () => {
 }
 import React from "react";
 import { div } from "framer-motion/client";
-import { Button, Card, CardBody, CardHeader, Input, Spinner } from "@heroui/react";
+import { Button, Card, CardBody, CardHeader, Input, Spinner, useNavbar } from "@heroui/react";
 import InvoiceDownloadBtn from "@/components/invoice/InvoiceDownloadBtn";
 import CreateInvoiceFormPopup from "@/components/forms/CreateInvoiceFormPopup";
 
 function InvoiceView({ invoice }: any) {
     if (!invoice) return null;
+    const navigate=useNavigate()
     const {
         invoice_id,
         invoice_date,
@@ -78,9 +79,11 @@ function InvoiceView({ invoice }: any) {
                         <div className="bg-default-200 px-2 py-1 rounded-xl">Customer Id : <span className="uppercase"> {customer_id_ref.customer_id}</span></div>
                         <div className="bg-default-200 px-2 py-1 rounded-xl">Customer Name : {customer_id_ref.name}</div>
                         <div className="bg-default-200 px-2 py-1 rounded-xl">Customer Mobile : <span className="uppercase"> {customer_id_ref.mobile}</span></div>
+                        <Button onPress={()=>{
+                            navigate('/customers/'+customer_id_ref._id)
+                        }} size="sm">View</Button>
                     </div>
                 </CardBody>
-
 
             </Card>
             <Card className="mt-2">
@@ -191,6 +194,7 @@ function InvoiceView({ invoice }: any) {
                             <div>Address 2: {customer_id_ref.address2}</div>
                             <div>Address 3: {customer_id_ref.address3}</div>
                             <div>Pincode: {customer_id_ref.pincode}</div>
+                             <div>GST number: {customer_id_ref.gst_number}</div>
                         </div>
 
 
@@ -210,6 +214,7 @@ function InvoiceView({ invoice }: any) {
                                 <div>Address 2: {shipping_details.address2}</div>
                                 <div>Address 3: {shipping_details.address3}</div>
                                 <div>Pincode: {shipping_details.pincode}</div>
+                                 <div>GST number: {customer_id_ref.gst_number}</div>
                                 <div>Notes: {shipping_details.notes} </div>
                             </div>
 
@@ -226,10 +231,8 @@ function InvoiceView({ invoice }: any) {
 
                         {transport_details ?
                             <div>
-                                <div>Contact Name : {transport_details.contact_name}</div>
-                                <div>Contact Mobile : {transport_details.contact_mobile}</div>
+                                <div>Name : {transport_details.name}</div>
                                 <div>Charged Amount: {transport_details.charged_amount}</div>
-                                <div>Vehical Number : {transport_details.vehical_number}</div>
                                 <div>Notes: {transport_details.notes} </div>
 
                             </div>
@@ -242,10 +245,6 @@ function InvoiceView({ invoice }: any) {
                 </Card>
             </div>
 
-            <Card>
-                <CardHeader>Linked Due date</CardHeader>
-                <CardBody>Name</CardBody>
-            </Card>
 
         </div>
     );
