@@ -50,7 +50,7 @@ function InvoiceDownloadBtn({ invoice_id_props }: any) {
         }
     }
     return (
-        <div className='flex items-center gap-2 bg-default-100 rounded-full border border-default-300'>
+        <div className='flex items-center justify-between gap-2 bg-default-100 rounded-full border border-default-300 w-28'>
             <Button onPress={() => pdf_view_handler(invoice_id_props)} size='sm' className='rounded-full'>   <Tooltip content='View invoice'> Pdf</Tooltip></Button>
             <div className='bg-default-200 rounded-full h-8 w-8 flex items-center justify-center' onClick={() => pdf_download_handler(invoice_id_props)}><Tooltip content='Download invoice'><ArrowDown className='outline-none' /></Tooltip></div>
             {/* {is_loading_view_pdf == item._id ? <Spinner size='sm' /> : 'ok'}

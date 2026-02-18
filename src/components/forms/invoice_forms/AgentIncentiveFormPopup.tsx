@@ -42,7 +42,7 @@ function AgentIncentiveFormPopup({is_update_invoice=false,customer_details,invoi
                         <div className='flex flex-col border-default border w-full p-2 rounded-xl'> 
                         Incentive Amount: {agent_incentive_amount}
                        </div>
-                    <Input min={0} onChange={(e)=>{set_incentive_percentage(e.target.value)}} endContent='%' type='number' labelPlacement='outside' defaultValue={`${incentive_percentage}`} label='Incentive Percentage (%)' name='incentive_percentage' />
+                    <Input min={0} onChange={(e:any)=>{set_incentive_percentage(e.target.value)}} endContent='%' type='number' labelPlacement='outside' defaultValue={`${incentive_percentage}`} label='Incentive Percentage (%)' name='incentive_percentage' />
                     
                    
                     </>

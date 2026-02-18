@@ -37,7 +37,7 @@ interface item_type {
     box_quantity: Number,
     box_size: Number,
     unit_price: Number,
-    loading: Boolean
+    loading: Boolean,color:String
 }
 
 interface is_already_exist_type {
@@ -48,7 +48,6 @@ export default function ReturnInvoiceForm() {
 const [date, setDate] = useState(
   new Date().toISOString().split("T")[0]
 );
-    const [shipping_details, set_shipping_details] = useState(null);
     const [selected_customer, set_selected_customer] = useState<any>(null);
     const [items, setItems] = useState<any>([]);
     const [item_details, set_item_details] = useState({
@@ -96,7 +95,7 @@ const [date, setDate] = useState(
 
     // const addItem = () => setItems([...items, emptyItem]);
     const removeItem = (index: number) =>
-        setItems(items.filter((_, i: number) => i !== index));
+        setItems(items.filter((_:any, i: number) => i !== index));
 
     const itemTotal = (item: any) => {
         // const effectiveQty =
@@ -410,7 +409,7 @@ const [date, setDate] = useState(
                               <Input
                                 // label="Lot number"
                                 isReadOnly
-                                value={item.color}
+                                value={`${item?.color}`}
                                 
                             />
                             {/**lot number */}

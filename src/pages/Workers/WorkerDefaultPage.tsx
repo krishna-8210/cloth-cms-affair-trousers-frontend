@@ -15,18 +15,10 @@ import { useNavigate } from 'react-router-dom'
 
 
 const ItemRender = ({ data }: any) => {
-        const navigate=useNavigate();
-      const dispatch=useDispatch()
-    
-    
-        const view_handler=()=>{
-            dispatch(select_worker_handler_reducer(data))
-            navigate(data?._id);
-        }
-    return <div className='relative w-96'>
-    
-    <WorkerDetails_render data={data} />
-    <Button onClick={view_handler} className='absolute top-2 right-2'>View</Button>
+      
+    return <div className='relative w-[450px]'>
+    <WorkerDetails_render data={data}  />
+   
     </div>
 }
 

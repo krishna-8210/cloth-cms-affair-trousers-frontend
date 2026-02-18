@@ -26,7 +26,7 @@ const MainForm = () => {
     }
     console.log(data);
     const resp = await responseHandler(worker_api_service.create, { data: data, id: '', query: '' }, { toast_display: true });
-    const data_reducer:any=[...pre_worker_list_slice, resp.data];
+    const data_reducer:any=[{...resp.data,recently_added:true},...pre_worker_list_slice];
     dispatch(worker_list_update_reducer(data_reducer));
     console.log(resp);
   }

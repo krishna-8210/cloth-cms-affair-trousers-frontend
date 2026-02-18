@@ -1,18 +1,14 @@
 import InventryDetails_max_render from '@/components/render_components/inventry/InventryDetails_max_render';
-import InventryDetails_mini_render from '@/components/render_components/inventry/InventryDetails_mini_render';
+
 import InventryRecordTable from '@/components/tables/InventryRecordTable';
-import SubmittedWorkStatusTable from '@/components/tables/SubmittedWorkStatusTable';
-import WorkDetailsCpm from '@/components/work/WorkDetailsCpm';
-import WorkStausTimelineCpm from '@/components/work/WorkStausTimelineCpm';
-import { responseHandler } from '@/libs/api_handle';
+
 import { inventry_api_service, work_api_service, work_status_record_api_service } from '@/services/mixServices';
 import DetailsPageTemplate from '@/templates/DetailsPageTemplate';
-import { dataDetails_type, datalist_type } from '@/types';
-import { Button, Card, CardBody, CardHeader, getKeyValue, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from '@heroui/react';
-import { details, div } from 'framer-motion/client';
-import { CloudHail } from 'lucide-react';
+
+import { Button, Card, CardBody, CardHeader } from '@heroui/react';
+
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux';
+
 import { useNavigate, useParams } from 'react-router-dom'
 
 // const SubmittedList = ({ list }: any) => {
@@ -101,12 +97,12 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 function InventryDetailsViewPage() {
     const params = useParams();
-    const navigate=useNavigate();
+    const navigate = useNavigate();
     const [details, set_details] = useState<any>(null)
     const id: any = params.inventry_id
     const distrbuted_quantity = (details && details?.distributed_quantity_json) ? JSON.parse(details.distributed_quantity_json) : null
     console.log(distrbuted_quantity)
-    const distrbuted_quantity_arr=distrbuted_quantity?Object.values(distrbuted_quantity) :[]
+    const distrbuted_quantity_arr = distrbuted_quantity ? Object.values(distrbuted_quantity) : []
     console.log(distrbuted_quantity_arr)
     useEffect(() => {
 
@@ -122,29 +118,29 @@ function InventryDetailsViewPage() {
 
             <DetailsPageTemplate setData={set_details} details_api={inventry_api_service.details} id={id} Render_component={InventryDetails_max_render}>
                 <>
-                <div className='mt-3 flex gap-2'>
-                    {Array.isArray(distrbuted_quantity_arr) && distrbuted_quantity_arr.map((e:any) => {
-                        return <Card className='w-96'>
-                            <CardHeader>Name: {e.name}</CardHeader>
-                         <CardBody>
-              <div>Key: {e.key}</div>
-<div>Initial Quantity: 0</div>
-<div>Avaliable Quantity: {e.quantity}</div>
-                         </CardBody>
-                        </Card>
-                    })}
+                    <div className='mt-3 flex gap-2'>
+                        {Array.isArray(distrbuted_quantity_arr) && distrbuted_quantity_arr.map((e: any) => {
+                            return <Card className='w-96'>
+                                <CardHeader>Name: {e.name}</CardHeader>
+                                <CardBody>
+                                    <div>Key: {e.key}</div>
+                                    <div>Initial Quantity: 0</div>
+                                    <div>Avaliable Quantity: {e.quantity}</div>
+                                </CardBody>
+                            </Card>
+                        })}
 
-                </div>
-                <Card className='mt-3'>
-                    <CardHeader className='flex justify-between '>
-                        <div className=' font-bold'> Recent Inventry Records</div>
-                       <div><Button onPress={()=>{navigate(`inventry-record-list`)}} size='sm'>View All</Button></div>
-                    </CardHeader>
-                    <CardBody>
-<InventryRecordTable show_pagination={false} id={id}/>
-                    </CardBody>
-                    
-                </Card>
+                    </div>
+                    <Card className='mt-3'>
+                        <CardHeader className='flex justify-between '>
+                            <div className=' font-bold'> Recent Inventry Records</div>
+                            <div><Button onPress={() => { navigate(`inventry-record-list`) }} size='sm'>View All</Button></div>
+                        </CardHeader>
+                        <CardBody>
+                            <InventryRecordTable limit={5} show_pagination={false} id={id} />
+                        </CardBody>
+
+                    </Card>
                 </>
             </DetailsPageTemplate>
 

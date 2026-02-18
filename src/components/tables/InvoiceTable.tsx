@@ -55,48 +55,48 @@ function InvoiceTable({ invoice_type='all_invoice_type' }: any) {
 
 
 
-    const pdf_view_handler = async (invoice_id: string) => {
-        try {
-            console.log(invoice_id)
-            // set_is_loading_view_pdf(invoice_id);
-            const resp = await responseHandler(invoice_api_service.pdf_download, { id: invoice_id, data: '', query: '' }, { toast_display: true })
+    // const pdf_view_handler = async (invoice_id: string) => {
+    //     try {
+    //         console.log(invoice_id)
+    //         // set_is_loading_view_pdf(invoice_id);
+    //         const resp = await responseHandler(invoice_api_service.pdf_download, { id: invoice_id, data: '', query: '' }, { toast_display: true })
 
-            // set_is_loading_view_pdf(null);
-            // resp.resp.data MUST be a Blob
-            const blob = new Blob([resp.resp.data], {
-                type: "application/pdf",
-            });
-            console.log(is_loading_view_pdf)
-            const url = window.URL.createObjectURL(blob);
-            window.open(url);
-        } catch (error) {
-            console.log(error)
-        }
-    }
-    const pdf_download_handler = async (invoice_id: string) => {
-        try {
-            console.log(invoice_id);
-            // set_is_loading_download_pdf(invoice_id);
-            const resp = await responseHandler(invoice_api_service.pdf_download, { id: invoice_id, data: '', query: '' }, { toast_display: true })
-            // set_is_loading_download_pdf(null);
-            // resp.resp.data MUST be a Blob
-            const blob = new Blob([resp.resp.data], {
-                type: "application/pdf",
-            });
+    //         // set_is_loading_view_pdf(null);
+    //         // resp.resp.data MUST be a Blob
+    //         const blob = new Blob([resp?.resp?.data], {
+    //             type: "application/pdf",
+    //         });
+    //         console.log(is_loading_view_pdf)
+    //         const url = window.URL.createObjectURL(blob);
+    //         window.open(url);
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+    // }
+    // const pdf_download_handler = async (invoice_id: string) => {
+    //     try {
+    //         console.log(invoice_id);
+    //         // set_is_loading_download_pdf(invoice_id);
+    //         const resp = await responseHandler(invoice_api_service.pdf_download, { id: invoice_id, data: '', query: '' }, { toast_display: true })
+    //         // set_is_loading_download_pdf(null);
+    //         // resp.resp.data MUST be a Blob
+    //         const blob = new Blob([resp.resp.data], {
+    //             type: "application/pdf",
+    //         });
 
-            const url = window.URL.createObjectURL(blob);
-            // window.open(url);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = `invoice-${invoice_id}.pdf`; // file name
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-            URL.revokeObjectURL(url);
-        } catch (error) {
-            console.log(error)
-        }
-    }
+    //         const url = window.URL.createObjectURL(blob);
+    //         // window.open(url);
+    //         const a = document.createElement("a");
+    //         a.href = url;
+    //         a.download = `invoice-${invoice_id}.pdf`; // file name
+    //         document.body.appendChild(a);
+    //         a.click();
+    //         a.remove();
+    //         URL.revokeObjectURL(url);
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+    // }
     const listLoader = async () => {
         console.log(page)
         try {

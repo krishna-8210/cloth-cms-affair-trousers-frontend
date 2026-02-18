@@ -1,4 +1,6 @@
+import { dateFormat } from "@/libs/mix";
 import { Button, Card, CardBody, CardHeader, Chip, Divider } from "@heroui/react";
+import { AnyAaaaRecord } from "dns";
 import { useNavigate } from "react-router-dom";
 
 type WorkQuantityCardProps = {
@@ -13,7 +15,7 @@ type WorkQuantityCardProps = {
     };
 };
 
-function InventryDetails_max_render({ data }: WorkQuantityCardProps) {
+function InventryDetails_max_render({ data }: any) {
     const isLowStock = data.avaliable_quantity < data.initial_quantity * 0.2;
     const details = data.details_id_ref;
      const work_details = data.work_id_ref;
@@ -49,10 +51,7 @@ function InventryDetails_max_render({ data }: WorkQuantityCardProps) {
 
             <CardBody className="space-y-3">
                 {/* Quantities */}
-                <div className="flex justify-between">
-                    <span className="text-sm text-default-500">Initial Quantity</span>
-                    <span className="font-medium">{data.initial_quantity}</span>
-                </div>
+               
 
                 <div className="flex justify-between">
                     <span className="text-sm text-default-500">Available Quantity</span>
@@ -84,14 +83,16 @@ function InventryDetails_max_render({ data }: WorkQuantityCardProps) {
                 <div className="flex justify-between">
                     <span className="text-sm text-default-500">Created At</span>
                     <span className="text-sm">
-                        {new Date(data.createdAt).toLocaleString()}
+                        {/* {new Date(data.createdAt).toLocaleString()} */}
+                        {dateFormat(data.createdAt).date}
                     </span>
                 </div>
 
                 <div className="flex justify-between">
                     <span className="text-sm text-default-500">Updated At</span>
                     <span className="text-sm">
-                        {new Date(data.updatedAt).toLocaleString()}
+                        {/* {new Date(data.updatedAt).toLocaleString()} */}
+                        {dateFormat(data.updatedAt).date}
                     </span>
                 </div>
              <Divider />  

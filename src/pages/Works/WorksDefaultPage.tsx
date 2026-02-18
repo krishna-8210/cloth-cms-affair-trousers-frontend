@@ -28,14 +28,10 @@ const ItemRender = ({ work_data, n }: any) => {
     const data = work_data.details;
     const status = work_data.status;
 
-    const view_handler = () => {
-        navigate(work_data._id);
-        dispatch(select_work_handler_reducer(work_data))
 
-    }
-  return <div className='relative w-96'>
+  return <div className='w-[450px]'>
     <WorkDetailsCpm work_data={work_data} n={n}/>
-<Button className='absolute top-5 right-5' onPress={view_handler}>View</Button>
+
   </div>
 }
 

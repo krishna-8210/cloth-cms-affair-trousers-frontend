@@ -68,7 +68,7 @@ function InvoiceView({ invoice }: any) {
                     </div>
                     <div className=" flex  items-start py-2  px-2 gap-2">
                         <InvoiceDownloadBtn invoice_id_props={invoice._id} />
-                        <div> <CreateInvoiceFormPopup pre_invoice_details={invoice} is_update_invoice={true} /></div>
+                        {/* <div> <CreateInvoiceFormPopup pre_invoice_details={invoice} is_update_invoice={true} /></div> */}
 
                     </div>
                 </div>

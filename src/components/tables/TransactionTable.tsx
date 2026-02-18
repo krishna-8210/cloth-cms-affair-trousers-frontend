@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
 import Transaction_details_popup from '../details_popup/Transaction_details_popup';
 import CreditDebitChip from '../CreditDebitChip';
+import { dateFormat } from '@/libs/mix';
 
 function TransactionTable({ id }: any) {
     const [list, set_list] = useState<datalist_type>({ list: [], loading: true, status: 'loading' })
@@ -15,30 +16,21 @@ function TransactionTable({ id }: any) {
             key: "_id",
             label: "Id",
         },
-        {
-            key: "previous_balance",
-            label: "Pre Balance",
-        },
+        
         {
             key: "amount",
             label: "Amount",
         },
-        {
-            key: "updated_balance",
-            label: "Updated Balance",
-        },
+      
         {
             key: "transaction_type",
             label: "Type",
         },
         {
-            key: "transaction_date",
+            key: "date",
             label: "Date",
         },
-        {
-            key: "createdAt",
-            label: "Created At",
-        },
+      
         {
             key: "notes",
             label: "Notes",
@@ -87,6 +79,9 @@ function TransactionTable({ id }: any) {
                                 )}
                                 {column.key === "transaction_type" && (
                                     <CreditDebitChip transaction_type={item.transaction_type} />
+                                )}
+                                 {column.key === "date" && (
+                                   dateFormat(item.transaction_date).date
                                 )}
 
                                 {column.key !== "_id" &&

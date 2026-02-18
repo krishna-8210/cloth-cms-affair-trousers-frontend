@@ -31,7 +31,7 @@ function CustomerDefaultPage() {
             <CustomerListLoaderApi />
             <div className='flex flex-wrap gap-2'>
                 {Array.isArray(customer_list_slice?.list) && customer_list_slice.list.map((data: any) => {
-                    return <div className='w-96'>
+                    return <div className='w-[450px]'>
                         <CustomerDetails_mini data={data} />
                     </div>
                 })}

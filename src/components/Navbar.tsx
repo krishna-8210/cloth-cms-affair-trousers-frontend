@@ -70,7 +70,7 @@ export default function Navbar({ navOpen, setNavOpen }: any) {
 
   const nav_items = [
 
-    { id: "", title: "Home", tooltip: "", route: "/", icon: "Hm" },
+    // { id: "", title: "Home", tooltip: "", route: "/", icon: "Hm" },
     {
       id: "", title: "Works", tooltip: "", route: "/works", icon: "Wk", childs: [
         { title: "", route: "" }

@@ -12,7 +12,7 @@ import { custom_add_toast } from "@/components/ui/CustomToast";
 import { api_arg_type } from "@/types";
 
 
-export const api_manager = async (apiService, arg, checkStatus, isAlert, message) => {
+export const api_manager = async (apiService:any, arg:any, checkStatus:any, isAlert:any, message:string) => {
   try {
     // body-body that needed when pass api
     const resp = await apiService(arg)
@@ -43,7 +43,7 @@ export const api_manager = async (apiService, arg, checkStatus, isAlert, message
     }
 
 
-  } catch (error) {
+  } catch (error:any) {
      console.log('error')
     // alert(error.response.data.message);
     if (isAlert === true) {
@@ -62,7 +62,7 @@ export const api_manager = async (apiService, arg, checkStatus, isAlert, message
 
   }
 }
-export const api_manager_v2 = async (apiService, arg) => {
+export const api_manager_v2 = async (apiService:any, arg:any) => {
   try {
     // body-body that needed when pass api
     const resp = await apiService(arg)
@@ -79,7 +79,7 @@ export const api_manager_v2 = async (apiService, arg) => {
     }
 
 
-  } catch (error) {
+  } catch (error:any) {
     // MessagePopup()
     console.log(error)
     console.log(error.message, "(internal error)");
@@ -139,7 +139,7 @@ export const responseHandler = async (apiService: any, arg: api_arg_type = { dat
     }
 
     return response;
-  } catch (error) {
+  } catch (error:any) {
     console.error('Error in responseHandler:', error);
     custom_add_toast({
       title: "System Error",

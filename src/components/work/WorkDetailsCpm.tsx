@@ -1,5 +1,5 @@
 import { select_work_handler_reducer, work_list_update_reducer } from '@/redux/DatalistSlice';
-import { Button, Card, CardBody, CardFooter, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem, useDisclosure } from '@heroui/react';
+import { Button, Card, CardBody, CardFooter, CardHeader, Chip, Divider, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem, useDisclosure } from '@heroui/react';
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -55,50 +55,80 @@ function WorkDetailsCpm({ work_data, n }: any) {
 
         }
     }
-
+    const view_handler = () => {
+        navigate(work_data._id);
+        dispatch(select_work_handler_reducer(work_data))
+    }
 
     return <Card aria-labelledby={'sdcs' + n} className={`border border-default w-full  `}>
         <CustomToast toast_center={true} />
-        <CardBody >
-            <div>
-                <span>Lot Number :</span>
-                <span>{work_data.lot_number}</span>
-            </div>
-            <div>
-                <span>Quantity :</span>
-                <span>{status?.final_quantity}</span>
-            </div>
-            {work_data.is_completed ?
-                <div>
-                    <span>Current status : </span>
-                    <Chip color='success' className='capitalize'>{'Completed'}</Chip>
-                </div>
-                :
-                <div>
-                    <span>Current status : </span>
-                    <Chip className='capitalize'>{status?.current_status}</Chip>
-                </div>
+        <CardHeader className='flex flex-col items-start'>
 
-            }
-
-            <div>
+            <div className='flex justify-between w-full'>
+                <div>  Lot Number </div>
+                <div>{work_data?.lot_number}</div>
+            </div>
+            <div className='flex justify-between w-full'>
                 <span>Range :</span>
                 <span>{data?.details?.range}</span>
             </div>
-            <div>
-                <span>Selling Price :</span>
-                <span>{data?.details?.selling_price}</span>
+        </CardHeader>
+        <Divider />
+        <CardBody >
+            {/* Quantities */}
+            {/* <div className="flex justify-between">
+                <span className="text-sm text-default-500">Lot Number</span>
+                <span className="font-medium">{work_data.lot_number}</span>
+            </div> */}
+
+            <div className="flex justify-between my-2">
+                <span className="text-sm text-default-500">Quantity</span>
+                <span className="font-semibold">
+                    {status?.final_quantity}
+                </span>
             </div>
-            <div>
-                <span>Series :</span>
-                <span>{data?.details?.series}</span>
+
+            <Divider />
+            <div className="flex justify-between my-2">
+                <span className="text-sm text-default-500">Selling Price</span>
+                <span className="font-semibold">
+                    {data?.details?.selling_price}
+                </span>
+            </div>
+
+            <div className="flex justify-between mb-2">
+                <span className="text-sm text-default-500">Series</span>
+                <span className="font-semibold">
+                    {data?.details?.series}
+                </span>
+            </div>
+            <Divider />
+
+
+
+
+
+            <div className='my-2'>
+                <div>
+                    {work_data.is_completed ?
+                        <div>
+                            <span>Current status : </span>
+                            <Chip color='success' size='sm' className='capitalize'>{'Completed'}</Chip>
+                        </div>
+                        :
+                        <div>
+                            <span>Current status : </span>
+                            <Chip size='sm' className='capitalize'>{status?.current_status}</Chip>
+                        </div>
+                    }
+                </div>
             </div>
 
         </CardBody>
 
-        <CardFooter className='flex justify-between items-end gap-2'>
+        <CardFooter className='flex justify-between items-center gap-2'>
 
-            <div>
+            <div >
                 {!work_data.is_completed && <div className='flex items-center gap-2'>
                     <span>Action :</span>
                     <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
@@ -136,8 +166,15 @@ function WorkDetailsCpm({ work_data, n }: any) {
 
                 </div>}
             </div>
+            <div className='flex justify-end items-center'>
+
+      
             <div>
                 {work_data?.recently_added ? <><Chip color='primary'>New</Chip></> : ''}
+            </div>
+            <div>
+
+                <Button className='' size='sm' onPress={view_handler}>View</Button>
             </div>
             <div>
 
@@ -156,6 +193,7 @@ function WorkDetailsCpm({ work_data, n }: any) {
                     </DropdownMenu>
                 </Dropdown>
             </div>
+                  </div>
         </CardFooter>
     </Card>
 }

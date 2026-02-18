@@ -147,7 +147,7 @@ export default function InvoiceForm({ is_update_invoice, pre_invoice_details = n
 
     // const addItem = () => setItems([...items, emptyItem]);
     const removeItem = (index: number) =>
-        setItems(items.filter((_, i: number) => i !== index));
+        setItems(items.filter((_:any, i: number) => i !== index));
 
     const itemTotal = (item: any) => {
         // const effectiveQty =
@@ -537,7 +537,7 @@ export default function InvoiceForm({ is_update_invoice, pre_invoice_details = n
                             <Input
                                 // label="Lot number"
                                 isReadOnly
-                                value={item.color}
+                                value={`${item.color}`}
 
                             />
                             {/**lot number */}
@@ -724,11 +724,11 @@ export default function InvoiceForm({ is_update_invoice, pre_invoice_details = n
                                 <div className="text-center text-lg ">Shipping Details</div>
 
                                 <br />
-                                <div>Contact name: {shipping_details?.contact_person_name}</div>
-                                <div>Contact mobile: {shipping_details?.contact_person_mobile}</div>
-                                <div>Address 1: {shipping_details?.address_1}</div>
-                                <div>Address 2: {shipping_details?.address_2}</div>
-                                <div>Address 3: {shipping_details?.address_3}</div>
+                                <div>Contact name: {shipping_details?.contact_name}</div>
+                                <div>Contact mobile: {shipping_details?.contact_mobile}</div>
+                                <div>Address 1: {shipping_details?.address1}</div>
+                                <div>Address 2: {shipping_details?.address2}</div>
+                                <div>Address 3: {shipping_details?.address3}</div>
                                 <div>Address 3: {shipping_details?.pincode}</div>
                             </div>}
                         {transport_details &&
@@ -736,9 +736,9 @@ export default function InvoiceForm({ is_update_invoice, pre_invoice_details = n
                                 <div className="text-center text-lg ">Transport Details</div>
 
                                 <br />
-                                <div>Contact Name: {transport_details?.contact_person_name}</div>
-                                <div>Contact Mobile: {transport_details?.contact_person_mobile}</div>
-                                <div>Charged Amount: {transport_details?.costamount}</div>
+                                <div>Contact Name: {transport_details?.contact_name}</div>
+                                <div>Contact Mobile: {transport_details?.contact_mobile}</div>
+                                <div>Charged Amount: {transport_details?.charged_amount}</div>
                                 <div>Vehical Number {transport_details?.vehical_number}</div>
                             </div>}
 

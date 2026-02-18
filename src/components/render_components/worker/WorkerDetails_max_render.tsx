@@ -41,7 +41,7 @@ function WorkerDetails_max_render({ data }: any) {
                 </div>
             </div>
             <div className='w-full border w-full p-5 rounded-xl border-default mt-2'>
-                <div>Avaliable Balance: {data?.balance_amount} rs</div>
+                <div>Balance: {data?.balance_amount} rs</div>
             </div>
         </CardBody>
     </Card>

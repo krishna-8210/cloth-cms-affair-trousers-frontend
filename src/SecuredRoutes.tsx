@@ -55,7 +55,7 @@ function SecuredRoutes() {
         <Route element={<MainLayout
           title={"Worker"}
           topnavItems={[
-            { id: 1, link: 'create', label: "Create Product", type: 'button' },
+            // { id: 1, link: 'create', label: "Create Product", type: 'button' },
             { id: 2, label: '', link: 'list', type: 'popup', element: <CreateWorkerForm /> },
             { id: 3, label: '', link: 'list', type: 'popup', element: <CreateWorkerRoles /> },
           ]

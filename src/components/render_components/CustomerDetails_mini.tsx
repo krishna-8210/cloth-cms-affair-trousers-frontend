@@ -1,13 +1,14 @@
 import { Button, Card, CardBody, CardHeader, Divider } from '@heroui/react'
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
+import BalanceShow from '../BalanceShow';
 
 function CustomerDetails_mini({ data }: any) {
     const details = data;
     const balance = data?.balance_id_ref;
-    const navigate=useNavigate()
+    const navigate = useNavigate()
     const view_handler = () => {
-    navigate(details._id)
+        navigate(details._id)
     }
     return (
         <Card className="w-full">
@@ -21,9 +22,9 @@ function CustomerDetails_mini({ data }: any) {
                         <p className="">Customer Id:</p>
                         <p className="uppercase">{details?.customer_id}</p>
                     </div>
-                      <div className='flex items-center gap-2'>
+                    <div className='flex items-center gap-2'>
                         <p className="">Agent Assigned:</p>
-                        <p className="uppercase">{details?.agent_id_ref?'Yes':'No'}</p>
+                        <p className="uppercase">{details?.agent_id_ref ? 'Yes' : 'No'}</p>
                     </div>
                 </div>
             </CardHeader>
@@ -46,9 +47,9 @@ function CustomerDetails_mini({ data }: any) {
 
                 {/* References */}
                 <div className="flex justify-between">
-                    <span className="text-sm text-default-500">Avaliable amount</span>
+                    <span className="text-sm text-default-500">Balance</span>
                     <span className="font-semibold">
-                        {balance?.amount}
+                        <BalanceShow balance={balance?.amount} />
                     </span>
                 </div>
 

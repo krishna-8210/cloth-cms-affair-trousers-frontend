@@ -1,3 +1,4 @@
+import { dateFormat, libs_distributed_json_hander } from "@/libs/mix";
 import { Button, Card, CardBody, CardHeader, Chip, Divider } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
 
@@ -10,10 +11,15 @@ type WorkQuantityCardProps = {
         updatedAt: string;
         details_id_ref: string;
         work_id_ref: string;
+        
     };
 };
 
-function InventryDetails_mini_render({ data }: WorkQuantityCardProps) {
+function InventryDetails_mini_render({ data }: any) {
+    if(!data)return ''
+  
+    const quantity_details:any=libs_distributed_json_hander(data.distributed_quantity_json)
+  
     const isLowStock = data.avaliable_quantity < data.initial_quantity * 0.2;
     const details = data.details_id_ref;
      const work_details = data.work_id_ref;
@@ -23,7 +29,7 @@ function InventryDetails_mini_render({ data }: WorkQuantityCardProps) {
         navigate(data._id)
     }
     return (
-        <Card className="w-96">
+        <Card className="w-[450px]">
             <CardHeader className="flex justify-between items-center">
                 <div >
                     <div className='flex items-center gap-2'>
@@ -50,14 +56,9 @@ function InventryDetails_mini_render({ data }: WorkQuantityCardProps) {
             <CardBody className="space-y-3">
                 {/* Quantities */}
                 <div className="flex justify-between">
-                    <span className="text-sm text-default-500">Initial Quantity</span>
-                    <span className="font-medium">{data.initial_quantity}</span>
-                </div>
-
-                <div className="flex justify-between">
                     <span className="text-sm text-default-500">Available Quantity</span>
                     <span className="font-semibold">
-                        {data.avaliable_quantity}
+                        {quantity_details.total_quantity}
                     </span>
                 </div>
 
@@ -67,14 +68,14 @@ function InventryDetails_mini_render({ data }: WorkQuantityCardProps) {
                 <div className="flex justify-between">
                     <span className="text-sm text-default-500">Selling Price</span>
                     <span className="font-semibold">
-                        {details.selling_price}
+                        {details?.selling_price}
                     </span>
                 </div>
 
                 <div className="flex justify-between">
                     <span className="text-sm text-default-500">Series</span>
                      <span className="font-semibold">
-                        {details.series}
+                        {details?.series}
                     </span>
                 </div>
 
@@ -84,14 +85,15 @@ function InventryDetails_mini_render({ data }: WorkQuantityCardProps) {
                 <div className="flex justify-between">
                     <span className="text-sm text-default-500">Created At</span>
                     <span className="text-sm">
-                        {new Date(data.createdAt).toLocaleString()}
+                         {dateFormat(data.createdAt).date}
                     </span>
                 </div>
 
                 <div className="flex justify-between">
                     <span className="text-sm text-default-500">Updated At</span>
                     <span className="text-sm">
-                        {new Date(data.updatedAt).toLocaleString()}
+                        {dateFormat(data.updatedAt).date}
+                       
                     </span>
                 </div>
              <Divider />  

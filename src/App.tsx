@@ -1,10 +1,6 @@
 
-
-
 import SecuredRoutes from "@/SecuredRoutes";
 import { useDispatch, useSelector } from "react-redux";
-
-
 import { useEffect, useState } from "react";
 import AuthForm from "./components/forms/AuthForm";
 import { isAuthenticated } from "./libs/token";
@@ -24,11 +20,11 @@ function App() {
 useEffect(() => {
    if(isAuthenticated()){
     const token = localStorage.getItem('token');
-    dispatch(makelogin());
+    dispatch(makelogin(''));
    }
    else{
     console.log("user is not authenticated");
-    dispatch(logout());
+    dispatch(logout(''));
    }
   }, [login]);
 
