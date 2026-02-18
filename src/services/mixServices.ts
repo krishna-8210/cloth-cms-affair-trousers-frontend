@@ -67,7 +67,8 @@ export const customer_api_service = {
 //invoice
 export const invoice_api_service = {
     ...presetApi('invoice'),
-    pdf_download: async (data: api_arg_type) => await Axios.get(baseurl + '/invoice/pdf/' + data.id, { headers: headerFunctions(),responseType:'blob' }),
+    pdf_download: async (data: api_arg_type) => await Axios.get(baseurl + '/invoice/pdf/' + data.id, { headers: headerFunctions(), responseType: 'blob' }),
+    create_return_invoice: async (data: api_arg_type) => await Axios.post(baseurl + '/invoice_return',data.data, { headers: headerFunctions(), }),
 }
 
 //agent

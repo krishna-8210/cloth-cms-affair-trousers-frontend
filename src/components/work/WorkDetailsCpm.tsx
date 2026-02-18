@@ -1,13 +1,18 @@
-import { select_work_handler_reducer } from '@/redux/DatalistSlice';
-import { Button, Card, CardBody, CardFooter, Chip, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem, useDisclosure } from '@heroui/react';
+import { select_work_handler_reducer, work_list_update_reducer } from '@/redux/DatalistSlice';
+import { Button, Card, CardBody, CardFooter, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem, useDisclosure } from '@heroui/react';
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import WorkActionsForm from '../forms/WorkForm';
+import { EllipsisVertical } from 'lucide-react';
+import { responseHandler } from '@/libs/api_handle';
+import { work_api_service } from '@/services/mixServices';
+import { CustomToast } from '../ui/CustomToast';
 
 function WorkDetailsCpm({ work_data, n }: any) {
     const [seltected_status, set_seletced_status] = useState<String>('initiated')
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    const worklist_slice = useSelector((e: any) => e.datalist_slice.work.list);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const action_handler = (e: any) => {
@@ -30,14 +35,31 @@ function WorkDetailsCpm({ work_data, n }: any) {
             return ['assign', 'completed']
         }
     }
-    const action_option_list: any = action_options(status.current_status);
+    const action_option_list: any = action_options(status?.current_status);
 
-    return <Card aria-labelledby={'sdcs' + n} className={`border border-default w-full min-h-48 h-72 `}>
+
+    const delete_handler = async () => {
+        try {
+            console.log(worklist_slice);
+
+
+            const resp = await responseHandler(work_api_service.delete, { id: data._id, data: '', query: '' }, { toast_display: true });
+            if (resp.status) {
+                console.log(resp);
+                const updated_list = worklist_slice.filter((e: any) => e._id !== data._id);
+                console.log(updated_list)
+                dispatch(work_list_update_reducer(updated_list));
+            }
+
+        } catch (error) {
+
+        }
+    }
+
+
+    return <Card aria-labelledby={'sdcs' + n} className={`border border-default w-full  `}>
+        <CustomToast toast_center={true} />
         <CardBody >
-            <div>
-                <span>Work Name :</span>
-                <span>{work_data?.details?.name}</span>
-            </div>
             <div>
                 <span>Lot Number :</span>
                 <span>{work_data.lot_number}</span>
@@ -74,45 +96,66 @@ function WorkDetailsCpm({ work_data, n }: any) {
 
         </CardBody>
 
-        <CardFooter className='flex justify-end items-end gap-2'>
+        <CardFooter className='flex justify-between items-end gap-2'>
 
-            {!work_data.is_completed && <div>
-                <span>Action</span>
-                <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-                    <ModalContent>
-                        {(onClose) => (
-                            <>
-                                <ModalHeader>Status Update</ModalHeader>
-                                <ModalBody className=''>
-                                    <WorkActionsForm item_data={data} status={seltected_status} />
-                                </ModalBody>
-                                <ModalFooter>
-                                    <Button color="danger" variant="light" onPress={onClose}>
-                                        Close
-                                    </Button>
+            <div>
+                {!work_data.is_completed && <div className='flex items-center gap-2'>
+                    <span>Action :</span>
+                    <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+                        <ModalContent>
+                            {(onClose) => (
+                                <>
+                                    <ModalHeader>Status Update</ModalHeader>
+                                    <ModalBody className=''>
+                                        <WorkActionsForm item_data={data} status={seltected_status} />
+                                    </ModalBody>
+                                    <ModalFooter>
+                                        <Button color="danger" variant="light" onPress={onClose}>
+                                            Close
+                                        </Button>
 
-                                </ModalFooter>
-                            </>
-                        )}
-                    </ModalContent>
-                </Modal>
+                                    </ModalFooter>
+                                </>
+                            )}
+                        </ModalContent>
+                    </Modal>
 
-                <span>
+                    <span>
 
-                    <Select aria-label='scs' onChange={action_handler} size='sm' className='w-32'>
+                        <Select aria-label='scs' onChange={action_handler} size='sm' className='w-32'>
 
-                        {/* <SelectItem  key='initiated' > Initiated</SelectItem> */}
-                        {/* <SelectItem key='assign' >Assign</SelectItem>
+                            {/* <SelectItem  key='initiated' > Initiated</SelectItem> */}
+                            {/* <SelectItem key='assign' >Assign</SelectItem>
                         <SelectItem key={'submission'}>Submission</SelectItem>
                         <SelectItem key={'completed'}>Completed</SelectItem> */}
-                        {action_option_list.map((e: any) => {
-                            return <SelectItem key={e} >{e}</SelectItem>
-                        })}
-                    </Select>
-                </span>
+                            {action_option_list.map((e: any) => {
+                                return <SelectItem key={e} >{e}</SelectItem>
+                            })}
+                        </Select>
+                    </span>
 
-            </div>}
+                </div>}
+            </div>
+            <div>
+                {work_data?.recently_added ? <><Chip color='primary'>New</Chip></> : ''}
+            </div>
+            <div>
 
+                <Dropdown>
+                    <DropdownTrigger>
+                        <EllipsisVertical
+                            className='text-default-300 hover:text-default-700  outline-none cursor-pointer' />
+                    </DropdownTrigger>
+                    <DropdownMenu aria-label="Static Actions">
+                        {/* <DropdownItem key="new">Update</DropdownItem> */}
+                        <DropdownItem onClick={() => {
+                            delete_handler()
+                        }} key="delete" className="text-danger" color="danger">
+                            Delete
+                        </DropdownItem>
+                    </DropdownMenu>
+                </Dropdown>
+            </div>
         </CardFooter>
     </Card>
 }

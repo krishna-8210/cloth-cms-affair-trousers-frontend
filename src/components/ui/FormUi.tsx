@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Form, Input, Button, Select, SelectItem } from "@heroui/react";
 import { CustomToast } from './CustomToast';
-function FormUi({ children, submit_handler }:any) {
+function FormUi({ children, submit_handler,submit_button_text='Submit'}:any) {
     const [loading, setLoading] = useState(false)
     const [action, setAction] =useState<string|null>(null);
     const submit_handler_func = async (e:any) => {
@@ -27,7 +27,7 @@ function FormUi({ children, submit_handler }:any) {
 
             <div className="flex gap-2 w-full  justify-center">
                 <Button isLoading={loading} color="primary" type="submit">
-                    Submit
+                    {submit_button_text}
                 </Button>
                 <Button type="reset" variant="flat">
                     Reset

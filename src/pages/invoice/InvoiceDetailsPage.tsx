@@ -18,6 +18,7 @@ import React from "react";
 import { div } from "framer-motion/client";
 import { Button, Card, CardBody, CardHeader, Input, Spinner } from "@heroui/react";
 import InvoiceDownloadBtn from "@/components/invoice/InvoiceDownloadBtn";
+import CreateInvoiceFormPopup from "@/components/forms/CreateInvoiceFormPopup";
 
 function InvoiceView({ invoice }: any) {
     if (!invoice) return null;
@@ -31,6 +32,7 @@ function InvoiceView({ invoice }: any) {
         transport_details,
         total_billed_amount,
         billing_type,
+        invoice_type,
     } = invoice;
     const column_titles: string[] = [
 
@@ -53,23 +55,33 @@ function InvoiceView({ invoice }: any) {
         <div>
             <Card className=" ">
                 <div className="flex w-full justify-between">
-                    <div className=" ">
+                    <div className=" w-full">
                         <CardHeader>Invoice Details </CardHeader>
                         <CardBody>
                             <div>Invoice Id : {invoice_id}</div>
-                            <div>Billing Type: {billing_type}</div>
+                            <div>Invoice Type: {invoice_type}</div>
+                            {billing_type && <div>Billing Type: {billing_type}</div>}
                             <div>Invoice Date : {invoice_date.split('T')[0]}</div>
-                            <div>Customer Name : {customer_id_ref.name}</div>
-                            <div>Customer Name : <span className="uppercase"> {customer_id_ref.customer_id}</span></div>
-                            <div>Customer Mobile : <span className="uppercase"> {customer_id_ref.mobile}</span></div>
+
+
                         </CardBody>
                     </div>
                     <div className=" flex  items-start py-2  px-2 gap-2">
                         <InvoiceDownloadBtn invoice_id_props={invoice._id} />
-                        <div>           <Button size='sm'>Update</Button></div>
+                        <div> <CreateInvoiceFormPopup pre_invoice_details={invoice} is_update_invoice={true} /></div>
 
                     </div>
                 </div>
+                <CardBody>
+                    <div className=" flex gap-3 w-full flex items-center border border-default-200 p-2 rounded-xl">
+                        <div>Customer Details: </div>
+                        <div className="bg-default-200 px-2 py-1 rounded-xl">Customer Id : <span className="uppercase"> {customer_id_ref.customer_id}</span></div>
+                        <div className="bg-default-200 px-2 py-1 rounded-xl">Customer Name : {customer_id_ref.name}</div>
+                        <div className="bg-default-200 px-2 py-1 rounded-xl">Customer Mobile : <span className="uppercase"> {customer_id_ref.mobile}</span></div>
+                    </div>
+                </CardBody>
+
+
             </Card>
             <Card className="mt-2">
                 <CardHeader>Invoice Items</CardHeader>
@@ -158,7 +170,7 @@ function InvoiceView({ invoice }: any) {
                     <div className="flex flex-col items-end border-t border-default-200">
                         {/* Billing details */}
 
-                        <Billing_details_Item title='(-) Discount Flat' value={billing_details.fix_discount_amount} />
+                        <Billing_details_Item title='(-) Discount Flat' value={billing_details.flat_discount_amount} />
                         <Billing_details_Item title='(-) Discount per piece' details={`@ ${billing_details.discount_per_piece}/pcs.`} value={billing_details.discount_per_piece_amount} />
                         <Billing_details_Item title='(+) Friegnt. Charges' value={billing_details.frieght_charges_amount} />
                         <Billing_details_Item title='(+) GST' details={`@ ${billing_details.gst_percentage}%`} value={billing_details.gst_amount} />

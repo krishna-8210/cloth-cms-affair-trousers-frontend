@@ -13,25 +13,14 @@ function InvoiceDefaultPages() {
                 </div>
             })} */}
                 <Tabs aria-label="Options">
-                    <Tab key="photos" title="All Invoice">
+                    <Tab key="all" title="All Invoice">
                         <InvoiceTable />
                     </Tab>
-                    <Tab key="music" title="Sales Invoice">
-                        <Card>
-                            <CardBody>
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-                                ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                                cillum dolore eu fugiat nulla pariatur.
-                            </CardBody>
-                        </Card>
+                    <Tab key="sales" title="Sales Invoice">
+                        <InvoiceTable invoice_type='sales' />
                     </Tab>
-                    <Tab key="videos" title="Return Invoice">
-                        <Card>
-                            <CardBody>
-                                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-                                mollit anim id est laborum.
-                            </CardBody>
-                        </Card>
+                    <Tab key="return" title="Return Invoice">
+                        <InvoiceTable invoice_type='return' />
                     </Tab>
                 </Tabs>
 

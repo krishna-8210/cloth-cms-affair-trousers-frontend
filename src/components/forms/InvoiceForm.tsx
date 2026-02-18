@@ -23,6 +23,7 @@ import TransportFormPopup from "./invoice_forms/TransportFormPopup";
 import DueDateFormPopup from "./invoice_forms/DueDateFormPopup";
 import AgentIncentiveFormPopup from "./invoice_forms/AgentIncentiveFormPopup";
 
+
 const emptyItem = {
     cloth_id: "",
     quantity: 0,
@@ -41,20 +42,61 @@ interface item_type {
     box_quantity: Number,
     box_size: Number,
     unit_price: Number,
-    loading: Boolean
+    loading: Boolean,
+    color: Number
 }
 
 interface is_already_exist_type {
     index: Number,
     status: Boolean
 }
-export default function InvoiceForm({is_update_form,pre_invoice_details}:any) {
+
+
+type shippingType = {
+    contact_name: String,
+    contact_mobile: String,
+    address1: String,
+    address2: String,
+    address3: String,
+    pincode: String,
+    notes: String,
+}
+type TransportType = {
+    contact_name: String,
+    contact_mobile: String,
+    charged_amount: String,
+    vehical_number: String,
+    notes: String,
+}
+
+type invoiceItemsType = {
+    barcode_data: String,
+    additional_quantity: Number,
+    range: Number,
+    quantity: Number,
+    box_quantity: Number,
+    box_size: Number,
+    unit_price: Number,
+    loading: Boolean,
+    color: Number
+}
+
+const barcode_handler = (parmas: string) => {
+    // "30010-2-4-25"
+    const spileted_item = parmas.split('-');
+    return {
+        barcode: parmas,
+        range_number: spileted_item[0],
+        color: spileted_item[1],
+    }
+}
+export default function InvoiceForm({ is_update_invoice, pre_invoice_details = null }: any) {
     const [date, setDate] = useState(
         new Date().toISOString().split("T")[0]
     );
-    const [shipping_details, set_shipping_details] = useState(null);
-    const [transport_details, set_transport_details] = useState(null);
-    const [due_date_details, set_due_date_details] = useState(null);
+    const [shipping_details, set_shipping_details] = useState<shippingType | null>(null);
+    const [transport_details, set_transport_details] = useState<TransportType | null>(null);
+    // const [due_date_details, set_due_date_details] = useState(null);
     const [agent_details, set_agent_details] = useState(null);
 
 
@@ -140,6 +182,7 @@ export default function InvoiceForm({is_update_form,pre_invoice_details}:any) {
         };
 
         const temp_items_list = [...list];
+        console.log(temp_items_list)
         temp_items_list.map((ele: item_type, index: Number) => {
             if (ele.barcode_data == barcode_data) {
                 is_already_exist.status = true;
@@ -327,7 +370,7 @@ export default function InvoiceForm({is_update_form,pre_invoice_details}:any) {
                 date,
                 agent_incentive_details,
                 shipping_details,
-                due_date_details,
+                // due_date_details,
                 transport_details,
                 billing_details: {
                     ...billing,
@@ -342,6 +385,22 @@ export default function InvoiceForm({is_update_form,pre_invoice_details}:any) {
             }
             console.log(server_obj)
 
+
+            if (is_update_invoice) {
+                await updata_data_handler(server_obj, pre_invoice_details)
+            }
+            else {
+                await save_data_handler(server_obj)
+            }
+
+        } catch (error) {
+            //  alert(error.message)
+            console.log(error)
+        }
+    }
+
+    const save_data_handler = async (server_obj: any) => {
+        try {
             const resp = await responseHandler(invoice_api_service.create, { id: '', data: server_obj, query: '' }, { toast_display: true });
             console.log(resp)
             if (resp.status) {
@@ -351,12 +410,61 @@ export default function InvoiceForm({is_update_form,pre_invoice_details}:any) {
                 alert(resp.message)
             }
         } catch (error) {
-            //  alert(error.message)
-            console.log(error)
+
+        }
+    }
+    const updata_data_handler = async (server_obj: any, invoice_details: any) => {
+        try {
+            console.log(invoice_details._id)
+            const resp = await responseHandler(invoice_api_service.update, { id: invoice_details._id, data: server_obj, query: '' }, { toast_display: true });
+            console.log(resp)
+            if (resp.status) {
+                console.log(resp)
+            }
+            else {
+                alert(resp.message)
+            }
+        } catch (error) {
+
         }
     }
 
+    const prefill_invoice_handler = () => {
 
+        if (is_update_invoice && pre_invoice_details) {
+            const { invoice_items, customer_id_ref } = pre_invoice_details;
+            //invoice items update 
+
+            invoice_items.map((e: any) => {
+                console.log(e)
+                const bardcode_details = barcode_handler(e.barcode);
+                const additional_q = e.invoice_quantity_details.additional_quantity;
+                const quantity_via_box = e.invoice_quantity_details.box_quantity * e.invoice_quantity_details.box_size;
+                console.log(bardcode_details);
+                setItems((x: any) => [...x, {
+                    barcode_data: e.barcode,
+                    range: bardcode_details.range_number,
+                    quantity: additional_q + quantity_via_box,
+                    quantity_via_box: quantity_via_box,
+                    additional_quantity: additional_q,
+                    box_quantity: e.invoice_quantity_details.box_quantity,
+                    box_size: e.invoice_quantity_details.box_size,
+                    unit_price: e.unit_selling_price,
+                    loading: false,
+                    color: bardcode_details.color,
+                    inventry_id:e.inventry_id_ref._id
+                }]
+                )
+            })
+            console.log(pre_invoice_details);
+            set_selected_customer(customer_id_ref);
+            set_shipping_details(pre_invoice_details.shipping_details);
+        }
+    }
+    useEffect(() => {
+        prefill_invoice_handler()
+
+    }, [])
 
     useEffect(() => {
         const obj = {
@@ -570,9 +678,6 @@ export default function InvoiceForm({is_update_form,pre_invoice_details}:any) {
                                     <div>mobile:{selected_customer.mobile}</div>
                                     <div>Current balance:{selected_customer?.balance_id_ref?.amount}</div>
                                     <div>address:{selected_customer.address}</div>
-
-
-
                                 </div>
                             }
 
@@ -595,11 +700,8 @@ export default function InvoiceForm({is_update_form,pre_invoice_details}:any) {
                                 )
                             })
                             }
-
                         </div>
-
                     </div>
-
                     <div className=" flex gap-2 justify-end w-full">
                         <Input //invoice custom date
                             className="w-61 border border-default-200 rounded-xl"
@@ -612,8 +714,8 @@ export default function InvoiceForm({is_update_form,pre_invoice_details}:any) {
                         />
                         <ShippingFormPopup details={shipping_details} setData={set_shipping_details} />
                         <TransportFormPopup data={transport_details} setData={set_transport_details} />
-                        <DueDateFormPopup data={due_date_details} setData={set_due_date_details} />
-                        <AgentIncentiveFormPopup total_billed_amount={grandTotal} invoice_items={items} customer_details={selected_customer} submit_callback={save_invoice_handler} />
+                        {/* <DueDateFormPopup data={due_date_details} setData={set_due_date_details} /> */}
+                        <AgentIncentiveFormPopup is_update_invoice={is_update_invoice} total_billed_amount={grandTotal} invoice_items={items} customer_details={selected_customer} submit_callback={save_invoice_handler} />
                     </div>
                     <div className="flex  gap-2">
 
@@ -642,14 +744,14 @@ export default function InvoiceForm({is_update_form,pre_invoice_details}:any) {
 
 
 
-                        {due_date_details &&
+                        {/* {due_date_details &&
                             <div className="w-96 border border-default-200 rounded-xl p-2 ">
                                 <div className="text-center text-lg ">Due Date Details</div>
                                 <br />
                                 <div>Due Date: {due_date_details?.due_date}</div>
                                 <div>Amount: {due_date_details?.amount}</div>
 
-                            </div>}
+                            </div>} */}
                     </div>
 
 

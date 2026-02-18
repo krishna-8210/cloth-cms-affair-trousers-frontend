@@ -39,9 +39,8 @@ function SecuredRoutes() {
           <Route element={<div>Product List Page</div>} path="list" />
         </Route>
         <Route element={<MainLayout
-          title={"Works"}
+          title={"Lots"}
           topnavItems={[
-            { id: 1, link: 'create', label: "Create Product", type: 'button' },
             { id: 2, label: '', link: 'list', type: 'popup', element: <CreateWorksForm /> },
             { id: 3, label: '', link: 'list', type: 'popup', element: <CreateColorFormPopup /> }
           

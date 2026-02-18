@@ -80,10 +80,10 @@ export default function Navbar({ navOpen, setNavOpen }: any) {
     { id: "", title: "Workers", tooltip: "", route: "/workers", icon: "Wr" },
     { id: "", title: "Inventry", tooltip: "", route: "/inventry", icon: "In" },
     // { id: "", title: "Invoice", tooltip: "", route: "/invoice", icon: "Gr" },
-     { id: "", title: "Invoices", tooltip: "", route: "/Invoices", icon: "Iv" },
+    { id: "", title: "Invoices", tooltip: "", route: "/Invoices", icon: "Iv" },
     { id: "", title: "Customers", tooltip: "", route: "/customers", icon: "Cm" },
     { id: "", title: "Agent", tooltip: "", route: "/agent", icon: "Ag" },
-   
+
 
   ]
 
@@ -102,6 +102,7 @@ export default function Navbar({ navOpen, setNavOpen }: any) {
         {nav_items && nav_items.map((e: any, n: number) => {
           return <div key={n + 'nav_items'}>
             {clicked?.toLocaleLowerCase() == e.title.toLocaleLowerCase() ?
+              <Link to={e.route}>
               <div onClick={(x) => {
 
                 setClicked(e.title);
@@ -113,7 +114,7 @@ export default function Navbar({ navOpen, setNavOpen }: any) {
 
                 <div className="text-[10px]  text-center">{e.title}</div>
               </div>
-
+</Link>
               :
               <Link to={e.route}>
                 <div onClick={(x) => {

@@ -11,11 +11,9 @@ import { div } from 'framer-motion/client';
 import { ArrowBigDown, ArrowDown, ArrowDown01, ArrowDownNarrowWide } from 'lucide-react';
 import InvoiceDownloadBtn from '../invoice/InvoiceDownloadBtn';
 
-function InvoiceTable({ id }: any) {
+function InvoiceTable({ invoice_type='all_invoice_type' }: any) {
     // const [is_loading_download_pdf, set_is_loading_download_pdf] = useState<string | null>(null);
     const [is_loading_view_pdf, set_is_loading_view_pdf] = useState<string | null>(null);
-
-
     const navigate = useNavigate();
     const [page, set_page] = useState(1);
     const [pagination, set_pagination] = useState<any>({ page: 1 });
@@ -34,6 +32,10 @@ function InvoiceTable({ id }: any) {
         {
             key: "invoice_date",
             label: "Date",
+        },
+         {
+            key: "invoice_type",
+            label: "Type",
         },
         {
             key: "customer_id_ref",
@@ -98,7 +100,7 @@ function InvoiceTable({ id }: any) {
     const listLoader = async () => {
         console.log(page)
         try {
-            const resp_list = await responseHandler(invoice_api_service.list, { id: '', data: '', query: `page=${page}&limit=11` })
+            const resp_list = await responseHandler(invoice_api_service.list, { id: '', data: '', query: `page=${page}&limit=11&invoice_type=${invoice_type}` })
 
             if (resp_list.status) {
                 if (Array.isArray(resp_list.data.list)) {

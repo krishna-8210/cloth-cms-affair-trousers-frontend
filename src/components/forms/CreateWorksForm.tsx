@@ -12,52 +12,49 @@ import { work_list_update_reducer } from '@/redux/DatalistSlice'
 
 const MainForm = () => {
   const [range, setRange] = useState({ series: '', price: '' });
-    const dispatch=useDispatch();
-      const pre_work_list_slice = useSelector((e: any) => e?.datalist_slice?.work?.list);
+  const dispatch = useDispatch();
+  const pre_work_list_slice = useSelector((e: any) => e?.datalist_slice?.work?.list);
   const submit_handler = async (data: any) => {
 
-  try {
-    const resp = await responseHandler(work_api_service.create, { data: data, id: '', query: '' },{toast_display:true});
-    console.log(resp);
-     
-    if(resp.status){
-      const obj:any={...resp.data?.work,details:{...resp.data?.details}};
-const data_reducer:any=[obj,...pre_work_list_slice];
-    dispatch(work_list_update_reducer(data_reducer));
+    try {
+      const resp = await responseHandler(work_api_service.create, { data: data, id: '', query: '' }, { toast_display: true });
+      console.log(resp);
+      if (resp.status) {
+        const data_reducer: any = [{...resp.data,recently_added:true}, ...pre_work_list_slice];
+        dispatch(work_list_update_reducer(data_reducer));
+      }
     }
-     } 
     catch (error) {
-    
-  }
+
+    }
   }
 
 
   return <div>
     <FormUi submit_handler={submit_handler} >
-      <Input label="Lot name" isRequired name='name' />
-       {/* <Input label="Lot Number" type='number' isRequired name='lot_number' /> */}
-       
-        <InputOtp description="Lot Number" label="Lot Number"  length={6} name='lot_number' />
+      {/* <Input label="Lot Number" type='number' isRequired name='lot_number' /> */}
+
+      <InputOtp description="Lot Number" label="Lot Number" length={6} name='lot_number' />
       <Input type='number' label="Unit Quantity" isRequired name='quantity' />
-      <Input label="Description" isRequired name='description' />
-      <Input label="Notes" isRequired name='notes' />
+      <Input label="Description" name='description' />
+      <Input label="Notes" name='notes' />
       <div>
         <div className='m-1'>Range: <span>{range.price}{range.series}</span> </div>
         <div className='flex gap-2'>
- <Input type='number' 
-        label='Selling Price'
-        onValueChange={(price) => {
-          setRange(e=>({...e,price:price}))
-        }} name='selling_price'  />
-        <Input 
-        label='Series'
-        onValueChange={(series) => {
-         setRange(e=>({...e,series:series}))
-        }}
-        type='number' name='series'  />
+          <Input type='number'
+            label='Selling Price'
+            onValueChange={(price) => {
+              setRange(e => ({ ...e, price: price }))
+            }} isRequired name='selling_price' />
+          <Input
+            label='Series'
+            onValueChange={(series) => {
+              setRange(e => ({ ...e, series: series }))
+            }}
+            type='number' isRequired name='series' />
 
         </div>
-       
+
       </div>
     </FormUi>
 
@@ -69,12 +66,12 @@ const data_reducer:any=[obj,...pre_work_list_slice];
 export default function CreateWorksForm() {
   return (
     <>
-    
-  
-    <ModalPopup button_title={'Create Lot'} modal_title={'Create Lot Form'} >
-      <MainForm />
-    </ModalPopup>
-      </>
+
+
+      <ModalPopup button_title={'Create Lot'} modal_title={'Create Lot Form'} >
+        <MainForm />
+      </ModalPopup>
+    </>
   )
 }
 

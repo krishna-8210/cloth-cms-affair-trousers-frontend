@@ -6,7 +6,7 @@ import { Switch } from '@heroui/switch'
 import { div } from 'framer-motion/client'
 import React, { useState } from 'react'
 
-function AgentIncentiveFormPopup({customer_details,invoice_items, submit_callback = () => {},total_billed_amount}:any) {
+function AgentIncentiveFormPopup({is_update_invoice=false,customer_details,invoice_items, submit_callback = () => {},total_billed_amount}:any) {
     const [incentive_status,set_incentive_status]=useState<boolean>(true);
     const [incentive_percentage,set_incentive_percentage]=useState<number>(2)
      const agent_incentive_amount=Math.round(Number(total_billed_amount)*(incentive_percentage/100))
@@ -21,7 +21,7 @@ function AgentIncentiveFormPopup({customer_details,invoice_items, submit_callbac
   
     return (
         <ModalPopup button_title={'Next'} btn_size='md' button_classname='capitalize bg-default bg-success text-black' modal_title={'Agent Incentive Form'} >
-            <FormUi submit_handler={submit_handler}>
+            <FormUi submit_button_text={is_update_invoice?'Update':'Submit'} submit_handler={submit_handler}>
                 {!customer_details&&<Button color="danger" variant="flat" className=' p-2 w-full rounded-xl text-center'>! Please Select Customer</Button>}
                {!invoice_items||!Array.isArray(invoice_items)||(invoice_items?.length<=0)&&<Button color="danger" variant="flat" className=' p-2 w-full rounded-xl text-center'>! Invoice items is empty</Button>}
                 <>

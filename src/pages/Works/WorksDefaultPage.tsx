@@ -46,7 +46,7 @@ function WorksDefaultPage() {
     console.log(worklist_slice);
     return (<>
         <WorklistLoaderApi />
-        <div className='flex flex-wrap gap-2'>
+        <div className='flex flex-wrap gap-2 '>
             {Array.isArray(worklist_slice.list) && worklist_slice.list.map((work_e: any, n: number) => {
                 return <ItemRender index={n} work_data={work_e} />
             })}

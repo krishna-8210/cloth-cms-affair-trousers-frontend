@@ -325,7 +325,7 @@ const [date, setDate] = useState(
                 quantity_details: item_details,
                 customer_id: selected_customer?._id
             }
-            const resp = await responseHandler(invoice_api_service.create, { id: '', data: server_obj, query: '' }, { toast_display: true });
+            const resp = await responseHandler(invoice_api_service.create_return_invoice, { id: '', data: server_obj, query: '' }, { toast_display: true });
             console.log(resp)
             if (resp.status) {
                 console.log(resp)
@@ -615,8 +615,8 @@ const [date, setDate] = useState(
                 </div> */}
 
                     <div className="flex w-full justify-center">
-                        <Button onClick={save_invoice_handler} color="success" className="w-32">
-                            Save Invoice
+                        <Button onPress={save_invoice_handler} color="success" className="w-48">
+                            Save Return Invoice
                         </Button>
                     </div>
 
