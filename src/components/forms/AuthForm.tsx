@@ -24,7 +24,7 @@ const LoginForm = ({ changeform }:any) => {
       if (data.force_login!=undefined) {
         console.log('forcelogin')
         localStorage.setItem('token', 'dummy_token')
-        dispatch(makelogin());
+        dispatch(makelogin(''));
         return;
       }
       const resp = await responseHandler(loginService, data);
@@ -32,7 +32,7 @@ const LoginForm = ({ changeform }:any) => {
       setLoading(false);
       localStorage.setItem('token', resp.data.token)
       if (resp.status == true) {
-        dispatch(makelogin());
+        dispatch(makelogin(''));
       }
       setLoading(false);
 
@@ -72,7 +72,7 @@ const LoginForm = ({ changeform }:any) => {
 
   return <>
     <Form
-      className="w-full  max-w-xs flex flex-col gap-4 p-5 justify-center items-center shadow-2xl border-gray-200 border-2 rounded-xl"
+      className="w-full  max-w-[500px] flex flex-col gap-4 p-5 justify-center items-center shadow-2xl  rounded-xl"
       onReset={() => setAction("reset")}
       onSubmit={submitHandler}
     >
@@ -92,11 +92,7 @@ const LoginForm = ({ changeform }:any) => {
         <Button isLoading={loading} color="primary" type="submit">
           Submit
         </Button>
-        <Button onClick={() => {
-          changeform('signup')
-        }} variant="flat">
-          Signup
-        </Button>
+      
       </div>
       {action && (
         <div className="text-small text-default-500">
@@ -108,7 +104,7 @@ const LoginForm = ({ changeform }:any) => {
 
 }
 
-const SignupForm = ({ changeform }) => {
+const SignupForm = ({ changeform }:any) => {
   const [action, setAction] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
   const submitHandler = async (e: any) => {
@@ -190,12 +186,11 @@ function AuthForm() {
     <>
       <CustomToast toast_center={true} />
       <div className='w-full h-full    justify-center items-center justify-self-center flex flex-col gap-4'>
-        {formType == 'login' ?
+       
           <LoginForm changeform={setFormType} />
-          :
-          <SignupForm changeform={setFormType} />
+        
 
-        }
+      
       </div>
     </>
   )

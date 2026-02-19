@@ -44,6 +44,16 @@ interface is_already_exist_type {
     index: Number,
     status: Boolean
 }
+
+const barcode_handler = (parmas: string) => {
+    // "30010-2-4-25"
+    const spileted_item = parmas.split('-');
+    return {
+        barcode: parmas,
+        range_number: spileted_item[0],
+        color: spileted_item[1],
+    }
+}
 export default function ReturnInvoiceForm() {
 const [date, setDate] = useState(
   new Date().toISOString().split("T")[0]

@@ -140,7 +140,7 @@ function WorkDetailsViewPage() {
         <>
             <div className='w-full p-2  h-full overflow-scroll'>
                 {work_data.loading && <Spinner />}
-                {!work_data.loading && <WorkDetailsCpm work_data={work_data.data} n={0} />}
+                {!work_data.loading && <WorkDetailsCpm is_max_view={true}  work_data={work_data.data} n={0} />}
                 {status_list.loading ? <Spinner /> : <SubmittedWorkStatusTable list={status_list.list} />}
                 {status_list.loading ? <Spinner /> : <WorkStausTimelineCpm list={status_list.list} />}
             </div>

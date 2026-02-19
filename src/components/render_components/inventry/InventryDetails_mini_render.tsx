@@ -20,7 +20,7 @@ function InventryDetails_mini_render({ data }: any) {
   
     const quantity_details:any=libs_distributed_json_hander(data.distributed_quantity_json)
   
-    const isLowStock = data.avaliable_quantity < data.initial_quantity * 0.2;
+    const isLowStock = quantity_details.total_quantity < 10;
     const details = data.details_id_ref;
      const work_details = data.work_id_ref;
      const navigate=useNavigate()

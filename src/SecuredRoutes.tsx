@@ -25,6 +25,8 @@ import CustomerTransactionListPage from "./pages/customers/CustomerTransactionLi
 import CreateColorFormPopup from "./components/forms/CreateColorFormPopup";
 import CreateReturnInvoiceFormPopup from "./components/forms/CreateReturnInvoiceFormPopup";
 import InventryListPage from "./pages/Inventry/InventryListPage";
+import CompnayCreateUpdateFormPopup from "./components/CompnayCreateUpdateFormPopup";
+import SettingDefaultPage from "./pages/setting/SettingDefaultPage";
 
 
 
@@ -39,7 +41,7 @@ function SecuredRoutes() {
           <Route element={<div>Product List Page</div>} path="list" />
         </Route>
         <Route element={<MainLayout
-          title={"Lots"}
+          title={"Works"}
           topnavItems={[
             { id: 2, label: '', link: 'list', type: 'popup', element: <CreateWorksForm /> },
             { id: 3, label: '', link: 'list', type: 'popup', element: <CreateColorFormPopup /> }
@@ -106,6 +108,18 @@ function SecuredRoutes() {
         />} path="/invoices" >
           <Route element={<InvoiceDefaultPages />} index />
           <Route path=":invoice_id" element={<InvoiceDetailsPage />} />
+
+        </Route>
+
+              <Route element={<MainLayout
+          title={"Setting"}
+          topnavItems={[
+           
+          ]}
+        />} path="/setting" >
+          <Route element={<SettingDefaultPage />} index />
+    
+          
         </Route>
         {/* 
 

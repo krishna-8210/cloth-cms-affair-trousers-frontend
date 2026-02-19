@@ -9,7 +9,7 @@ import { responseHandler } from '@/libs/api_handle';
 import { work_api_service } from '@/services/mixServices';
 import { CustomToast } from '../ui/CustomToast';
 
-function WorkDetailsCpm({ work_data, n ,is_max_view=false}: any) {
+function WorkDetailsCpmMax({ work_data, n }: any) {
     const [seltected_status, set_seletced_status] = useState<String>('initiated')
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const worklist_slice = useSelector((e: any) => e.datalist_slice.work.list);
@@ -174,7 +174,7 @@ function WorkDetailsCpm({ work_data, n ,is_max_view=false}: any) {
             </div>
             <div>
 
-                {!is_max_view&&<Button className='' size='sm' onPress={view_handler}>View</Button>}
+                <Button className='' size='sm' onPress={view_handler}>View</Button>
             </div>
             <div>
 
@@ -198,4 +198,4 @@ function WorkDetailsCpm({ work_data, n ,is_max_view=false}: any) {
     </Card>
 }
 
-export default WorkDetailsCpm
+export default WorkDetailsCpmMax

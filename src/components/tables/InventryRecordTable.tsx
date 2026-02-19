@@ -9,6 +9,7 @@ import Transaction_details_popup from '../details_popup/Transaction_details_popu
 import CreditDebitChip from '../CreditDebitChip';
 import { div, span } from 'framer-motion/client';
 import InOutChip from '../InOutChip';
+import { dateFormat } from '@/libs/mix';
 
 
 interface table_type {
@@ -51,13 +52,10 @@ function InventryRecordTable({ id, show_pagination,limit=5 }: table_type) {
             label: "Releted To",
         },
         {
-            key: "date",
+            key: "invoice_date",
             label: "Date",
         },
-        {
-            key: "customer_id_ref",
-            label: "Customer Name",
-        },
+        
     ];
 
 
@@ -125,7 +123,7 @@ function InventryRecordTable({ id, show_pagination,limit=5 }: table_type) {
                                     <InOutChip type={item.in_out} />
                                 )}
 
-                                {column.key === 'invoice_date' && (item?.invoice_date?.split('T')[0])}
+                                {column.key === 'invoice_date' && dateFormat(item?.date)?.date}
 {column.key === 'color' && (item?.color_id_ref?.name&&<div className='capitalize'>{item.color_id_ref.name+'('+item.color_id_ref.key+')'}</div>)}
                                 {column.key === 'entry_type' && <span className='capitalize'>{item.entry_type}</span>}
 

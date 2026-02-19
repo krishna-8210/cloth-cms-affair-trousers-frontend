@@ -1,7 +1,7 @@
-export const getToken=(e=>{
+export const getToken=((e:any)=>{
     return localStorage.getItem('token')
 })
-export const setToken=(e=>{
+export const setToken=((e:any)=>{
     console.log(e,'token')
     return localStorage.setItem('token',e)
 });

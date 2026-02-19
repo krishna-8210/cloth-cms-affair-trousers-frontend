@@ -10,7 +10,10 @@ function WorklistLoaderApi() {
         try {
             const resp = await responseHandler(work_api_service.list);
             console.log(resp.data);
-            dispatch(work_list_update_reducer(resp.data));
+            if (resp.status) {
+                dispatch(work_list_update_reducer(resp.data));
+            }
+
         } catch (error) {
             console.log(error)
         }

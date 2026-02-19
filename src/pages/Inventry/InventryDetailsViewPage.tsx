@@ -125,9 +125,6 @@ function InventryDetailsViewPage() {
                                 <CardHeader className='text-lg'>Name: {e.name}</CardHeader>
                                 <CardBody className='text-default-600'>
                                     <div>Key: {e.key}</div>
-
-                                    <div>Initial Quantity: 0</div>
-
                                     <div>Avaliable Quantity: {e.quantity}</div>
                                 </CardBody>
                             </Card>

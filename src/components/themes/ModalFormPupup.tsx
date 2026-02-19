@@ -8,7 +8,7 @@ import {
   useDisclosure,
 } from "@heroui/react";
 import FormUi from "../ui/FormUi";
-import { useState } from "react";
+
 
 export default function ModalFormPupup({closePopup=true,  onClosePopup=()=>{},button_classname='', button_title, modal_title, children,btn_size='sm', size = 'sm', button_color = 'primary',submit_handler=()=>{} }:any) {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
@@ -45,7 +45,7 @@ const save_handler=async(e:any)=>{
                 <Button  color="danger" variant="light" onPress={() => {
                   onClosePopup(onClose)
                   onClose()
-                   setIsLoading(false)
+                   
                 }}>
                   Close
                 </Button>

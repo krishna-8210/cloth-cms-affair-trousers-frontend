@@ -1,16 +1,26 @@
 import React, { useEffect, useState } from 'react'
 import ModalPopup from '../themes/ModalPopup'
 import FormUi from '../ui/FormUi'
-import { Autocomplete, AutocompleteItem, Chip, Input, Select, SelectItem, Spinner, Switch, Textarea } from '@heroui/react'
+import { Autocomplete, AutocompleteItem, Button, Chip, Input, Select, SelectItem, Spinner, Switch, Textarea, useDisclosure, useSelect } from '@heroui/react'
 import { responseHandler } from '@/libs/api_handle'
-import { color_api_service, work_status_record_api_service, worker_api_service } from '@/services/mixServices'
-import { dataDetails_type, datalist_type } from '@/types'
+import { color_api_service, work_api_service, work_status_record_api_service, worker_api_service } from '@/services/mixServices'
+import { api_arg_type, dataDetails_type, datalist_type, type_ApiState } from '@/types'
 import { color } from 'framer-motion'
+import { libs_distributed_json_hander } from '@/libs/mix'
+import { div } from 'framer-motion/client'
+import { prepareAutoBatched } from '@reduxjs/toolkit'
+import { useDispatch, useSelector } from 'react-redux'
+import { work_list_update_reducer } from '@/redux/DatalistSlice'
 
+const update_list_handler = (list: any[], updated_data: any) =>
+    list.map((item: any) =>
+        item._id === updated_data._id
+            ? { ...item, ...updated_data }
+            : item
+    );
 
-const AssignFormComponent = ({ item_data }: any) => {
+const AssignFormComponent = ({ item_data, update_item }: any) => {
     const item_status = item_data?.status
-
 
     const [workerlist, setWorkerlist] = useState<datalist_type>({ list: [], status: 'loaded', loading: false })
     const [additional_quantity, set_additional_quantity] = useState<number>(0);
@@ -26,6 +36,10 @@ const AssignFormComponent = ({ item_data }: any) => {
                     status_record_id_ref: item_status?._id
                 }, id: '', query: ''
             }, { toast_display: true })
+
+            if (resp.status) {
+                update_item(resp.data)
+            }
             console.log(resp);
         } catch (error) {
             console.log(error)
@@ -55,7 +69,7 @@ const AssignFormComponent = ({ item_data }: any) => {
 
                 set_additional_quantity(Number(data))
             }} label='Additional quantity' name='additional_quatity' />
-            <Input isRequired label='Per unit price' name='price_per_piece' />
+            <Input isRequired label='Per unit price' type='number' name='price_per_piece' />
             <Input label='Notes' name='notes' />
             <Input label='Date' type='date' name='custom_date' />
             <div>
@@ -85,10 +99,10 @@ const WorkerDetails = ({ details }: any) => {
     </div>
 }
 
-const SubmissionFormComponent = ({ item_data }: any) => {
+const SubmissionFormComponent = ({ item_data, update_item }: any) => {
 
     const [assigned_worker_details, set_assigned_worker_details] = useState<dataDetails_type>({ loading: true, status: 'loading', data: null })
-
+    const dispatch = useDispatch()
     const item_status = item_data?.status;
     console.log(item_status)
     const temp_price_per_piece = item_status?.temp_price_per_piece;
@@ -120,7 +134,9 @@ const SubmissionFormComponent = ({ item_data }: any) => {
                     status_record_id_ref: item_status?._id,
                 }, id: '', query: ''
             }, { toast_display: true })
-            console.log(resp);
+            if (resp.status) {
+update_item(resp.data)
+            }
 
         } catch (error) {
             console.log(error)
@@ -218,27 +234,36 @@ const SubmissionFormComponent = ({ item_data }: any) => {
 
     </>
 }
-const CompleteStatusFormComponent = ({ item_data }: any) => {
+
+
+type selected_color_type = {
+
+}
+const CompleteStatusFormComponent = ({ item_data,update_item }: any) => {
     const item_status = item_data?.status;
+    const range_number = item_data.details.range;
+
+    const [pre_quantity, set_pre_quantity] = useState<number>(0)
     const avaliable_quantity = item_status.final_quantity
     const [color_list, set_color_list] = useState({ list: [], status: 'loading' })
-    const [selected_color, set_selected_color] = useState([])
-
+    const [selected_color, set_selected_color] = useState<any>([])
+    const [range_match_status, set_range_match_status] = useState<type_ApiState>({ data: null, loading: false })
     const submit_handler = async (formdata: any) => {
 
         try {
             console.log(formdata);
 
             // check the correct distribution, so 
-           
+
             let seleted_total_distribution = 0
-            selected_color.map((e) => {
-                seleted_total_distribution+=e.quantity;
+            selected_color.map((e: any) => {
+                seleted_total_distribution += e.quantity;
             })
             console.log(selected_color)
-            console.log(seleted_total_distribution)
-            if (avaliable_quantity != seleted_total_distribution) {
-                alert(`Quntity is not distributed correctly, please fix to proceed further,(total quantity is ${avaliable_quantity},but total distributed quantity is ${seleted_total_distribution}) `)
+            console.log(seleted_total_distribution);
+            const total_quantity = avaliable_quantity + pre_quantity
+            if (total_quantity != seleted_total_distribution) {
+                alert(`Quntity is not distributed correctly, please fix to proceed further,(total quantity is ${total_quantity},but total distributed quantity is ${seleted_total_distribution}) `)
                 return;
             }
 
@@ -247,11 +272,14 @@ const CompleteStatusFormComponent = ({ item_data }: any) => {
                     formdata,
                     action: 'completed',
                     status_record_id_ref: item_status?._id,
-                     quantity_distribution:selected_color
+                    matched_inventry_id: range_match_status?.data?.matched_inventry_id,
+                    quantity_distribution: selected_color
                 }, id: '', query: '',
-               
+
             }, { toast_display: true })
-            console.log(resp);
+            if (resp.status) {
+update_item(resp.data)
+            }
 
         } catch (error) {
             console.log(error)
@@ -271,59 +299,101 @@ const CompleteStatusFormComponent = ({ item_data }: any) => {
         }
     }
 
+    const fetch_range_handler = async () => {
+        set_range_match_status({ data: null, loading: true })
+        try {
+            const resp = await responseHandler(work_status_record_api_service.range_match, { id: range_number, data: '', query: '' });
+            if (resp.status) {
+                const match_data = resp?.data?.matched_data;
+                set_range_match_status({ data: { ...resp.data, matched_inventry_id: match_data?._id }, loading: false });
+
+                if (match_data) {
+                    const distributed_quantity_json = match_data.distributed_quantity_json;
+                    const formated_data: any = libs_distributed_json_hander(distributed_quantity_json);
+                    console.log(formated_data);
+                    set_selected_color(formated_data.list);
+                    set_pre_quantity(formated_data.total_quantity);
+                }
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
     useEffect(() => {
-        fetch_color_list()
+        fetch_color_list();
+        fetch_range_handler();
     }, []);
 
 
     return <>
 
         <FormUi submit_handler={submit_handler}>
+            <Button onPress={() => console.log(range_match_status)}>test</Button>
             <Chip>Completed: Work to Inventry</Chip>
             <div>Note: This Action will complete the work and add the inventry which then ready to sell</div>
             <div>
-                Avaliable Quantity <Chip>{item_data?.status?.final_quantity}</Chip>
+
+                <div>
+                    Inventry Match Status  {range_match_status.loading ? <Spinner size='sm' /> : <Chip>{range_match_status?.data?.match_status}</Chip>}
+                </div>
+                <div>
+                    Current Quantity : <Chip size='sm'>{item_data?.status?.final_quantity}</Chip>
+                </div>
+                {range_match_status?.data?.match_status == 'matched' &&
+                    <div className='flex flex-col gap-1 mt-1'>
+                        <div>Previous Quantity :  <Chip size='sm'>{pre_quantity}</Chip> { }</div>
+                        <div>Total Quantity :  <Chip size='sm'>{pre_quantity + item_data?.status?.final_quantity}</Chip> { }</div>
+                    </div>
+
+                }
+
+
                 {/* {console.log(item_data)} */}
             </div>
 
             <div>
                 {
-                    selected_color.map((item: any, n) => {
+                    selected_color.map((item: any, n: number) => {
                         return <div className='grid grid-cols-3 m-1 '>
                             <div>Key: {item?.key}</div>
                             <div>Name: {item?.name}</div>
-                            <div><Input type='number' min={0} onChange={(e) => {
-                                const qn = e.target.value;
-                                set_selected_color((c) => {
-                                    const list = [...c];
-                                    list[n].quantity = Number(qn);
-                                    return list;
-                                })
-                            }} placeholder='quantity' size='sm' /></div>
+                            <div><Input type='number' defaultValue={item.quantity || 0} min={0}
+                                onChange={(e) => {
+                                    const qn = e.target.value;
+                                    console.log(qn)
+                                    set_selected_color((c: any) => {
+                                        const list = [...c];
+                                        list[n].quantity = Number(qn);
+                                        return list;
+                                    })
+                                }} placeholder='quantity' size='sm' /></div>
                         </div>
                     })
                 }
             </div>
-            <Textarea label='Notes' name='notes' />
+            <Autocomplete size='sm' label='Select Color' onSelectionChange={(e) => { console.log(e) }}>
+                <>
+                    {Array.isArray(color_list.list) && color_list.list.map((e: any, n) => {
+                        let is_already_added = false;
+                        selected_color.map((color: any) => {
+                            if (e.key == color.key) {
+                                is_already_added = true;
+                            }
+
+                        })
+                        // console.log(e);
+                        if (!is_already_added) {
+                            return <AutocompleteItem onPress={() => { set_selected_color((x:any) => [...x, e]) }} aria-label='itt' key={e.key}>
+                                {e.name}
+                            </AutocompleteItem>
+                        }
+                    })}
+                </>
+            </Autocomplete>
+            <Input label='Notes' name='notes' />
         </FormUi>
         <div>
-            <Autocomplete onSelectionChange={(e) => { console.log(e) }}>
-                {Array.isArray(color_list.list) && color_list.list.map((e: any, n) => {
-                    let is_already_added = false;
-                    selected_color.map((color: any) => {
-                        if (e.key == color.key) {
-                            is_already_added = true;
-                        }
 
-                    })
-                    // console.log(e);
-                    if (!is_already_added) {
-                        return <AutocompleteItem onPress={() => { set_selected_color(x => [...x, e]) }} aria-label='itt' key={e.key}>
-                            {e.name}
-                        </AutocompleteItem>
-                    }
-                })}
-            </Autocomplete>
         </div>
 
 
@@ -332,15 +402,20 @@ const CompleteStatusFormComponent = ({ item_data }: any) => {
 
 function WorkActionsForm({ status, item_data }: any) {
 
-    console.log(item_data);
+    const dispatch = useDispatch();
+    const worklist_slice = useSelector((e: any) => e.datalist_slice.work.list);
+    const update_item = (updated_data: any) => {
+        const updated_list: any = update_list_handler(worklist_slice, updated_data);
+        dispatch(work_list_update_reducer(updated_list))
+    }
     return (
         <>
             { }
 
             <>
-                {status == 'assign' && <AssignFormComponent item_data={item_data} />}
-                {status == 'submission' && <SubmissionFormComponent item_data={item_data} />}
-                {status == 'completed' && <CompleteStatusFormComponent item_data={item_data} />}
+                {status == 'assign' && <AssignFormComponent update_item={update_item} item_data={item_data} />}
+                {status == 'submission' && <SubmissionFormComponent update_item={update_item} item_data={item_data} />}
+                {status == 'completed' && <CompleteStatusFormComponent update_item={update_item} item_data={item_data} />}
             </>
 
         </>

@@ -83,6 +83,7 @@ export default function Navbar({ navOpen, setNavOpen }: any) {
     { id: "", title: "Invoices", tooltip: "", route: "/Invoices", icon: "Iv" },
     { id: "", title: "Customers", tooltip: "", route: "/customers", icon: "Cm" },
     { id: "", title: "Agent", tooltip: "", route: "/agent", icon: "Ag" },
+    { id: "", title: "Setting", tooltip: "", route: "/setting", icon: "St" },
 
 
   ]
@@ -103,18 +104,18 @@ export default function Navbar({ navOpen, setNavOpen }: any) {
           return <div key={n + 'nav_items'}>
             {clicked?.toLocaleLowerCase() == e.title.toLocaleLowerCase() ?
               <Link to={e.route}>
-              <div onClick={(x) => {
+                <div onClick={(x) => {
 
-                setClicked(e.title);
+                  setClicked(e.title);
 
-              }} className="cursor-pointer flex items-center flex-col">
+                }} className="cursor-pointer flex items-center flex-col">
 
-                <div className="w-10 h-10  rounded-xl flex justify-center items-center bg-blue-500 ">{e.icon}</div>
+                  <div className="w-10 h-10  rounded-xl flex justify-center items-center bg-blue-500 ">{e.icon}</div>
 
 
-                <div className="text-[10px]  text-center">{e.title}</div>
-              </div>
-</Link>
+                  <div className="text-[10px]  text-center">{e.title}</div>
+                </div>
+              </Link>
               :
               <Link to={e.route}>
                 <div onClick={(x) => {

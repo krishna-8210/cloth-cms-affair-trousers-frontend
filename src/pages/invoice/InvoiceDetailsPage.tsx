@@ -169,12 +169,17 @@ function InvoiceView({ invoice }: any) {
                             </div>
                         ))}
                     </div>
+                    <div className="flex flex-col items-end border-t border-default-200 p-2">
+ <Billing_details_Item title=' Sub total' value={billing_details.sub_total_amount} />
+                    </div>
 
                     <div className="flex flex-col items-end border-t border-default-200">
                         {/* Billing details */}
 
+                       
+                      
                         <Billing_details_Item title='(-) Discount Flat' value={billing_details.flat_discount_amount} />
-                        <Billing_details_Item title='(-) Discount per piece' details={`@ ${billing_details.discount_per_piece}/pcs.`} value={billing_details.discount_per_piece_amount} />
+                        <Billing_details_Item title='(-) Discount per piece' details={`@ ${billing_details.discount_per_piece}*${billing_details.total_items}pcs.`} value={billing_details.discount_per_piece_amount} />
                         <Billing_details_Item title='(+) Friegnt. Charges' value={billing_details.frieght_charges_amount} />
                         <Billing_details_Item title='(+) GST' details={`@ ${billing_details.gst_percentage}%`} value={billing_details.gst_amount} />
                         <Billing_details_Item title='Round off' value={billing_details.round_of_amount} />

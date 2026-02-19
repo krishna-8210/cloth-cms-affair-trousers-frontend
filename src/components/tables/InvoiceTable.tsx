@@ -10,6 +10,7 @@ import CreditDebitChip from '../CreditDebitChip';
 import { div } from 'framer-motion/client';
 import { ArrowBigDown, ArrowDown, ArrowDown01, ArrowDownNarrowWide } from 'lucide-react';
 import InvoiceDownloadBtn from '../invoice/InvoiceDownloadBtn';
+import { dateFormat } from '@/libs/mix';
 
 function InvoiceTable({ invoice_type='all_invoice_type' }: any) {
     // const [is_loading_download_pdf, set_is_loading_download_pdf] = useState<string | null>(null);
@@ -156,7 +157,7 @@ function InvoiceTable({ invoice_type='all_invoice_type' }: any) {
                                 {column.key === 'action' && (<Button onPress={() => navigate(item._id)} size='sm'>View</Button>)}
                                 {column.key === 'total_billed_amount' && (item?.billing_details.total_billed_amount)}
                                 {column.key === 'pdf' && <InvoiceDownloadBtn invoice_id_props={item._id} />}
-                                {column.key === 'invoice_date' && (item?.invoice_date?.split('T')[0])}
+                                {column.key === 'invoice_date' && dateFormat(item?.invoice_date).date}
                                 {column.key === 'customer_id_ref' && <div className='cursor-pointer' onClick={() => {
                                     navigate(`/customers/${item?.customer_id_ref?._id}`)
                                 }}>

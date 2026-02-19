@@ -68,7 +68,7 @@ export default function PassowordInput({title_position}:any) {
 
   return (
     <Input
-      className="max-w-xs"
+      className="w-full"
       endContent={
         <button
           aria-label="toggle password visibility"

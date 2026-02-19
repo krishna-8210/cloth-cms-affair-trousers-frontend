@@ -16,7 +16,7 @@ const params=useParams();
   const credit_handler = async (form_data: any) => {
     try {
       const resp = await responseHandler(worker_transction_api_service.individual_credit_amount, { data: {...form_data,worker_id:params.worker_id}, query: '', id: '' }, { toast_display: true })
-      console.log(resp)
+      console.log(resp);
 
     } catch (error) {
       console.log(error)

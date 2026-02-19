@@ -1,4 +1,6 @@
-import { dateFormat } from "@/libs/mix";
+import BarcodeGeneratorModalPopup from "@/components/BarcodeGeneratorModalPopup";
+import BarcodeGenerator from "@/components/BarcodeGeneratorModalPopup";
+import { dateFormat, libs_distributed_json_hander } from "@/libs/mix";
 import { Button, Card, CardBody, CardHeader, Chip, Divider } from "@heroui/react";
 import { AnyAaaaRecord } from "dns";
 import { useNavigate } from "react-router-dom";
@@ -16,14 +18,18 @@ type WorkQuantityCardProps = {
 };
 
 function InventryDetails_max_render({ data }: any) {
-    const isLowStock = data.avaliable_quantity < data.initial_quantity * 0.2;
+      if(!data)return ''
+  const distributed_quantity_json=data.distributed_quantity_json;
+     const distributed_list:any=libs_distributed_json_hander(distributed_quantity_json);
+console.log(distributed_list)
+    // const isLowStock = data.avaliable_quantity < data.initial_quantity * 0.2;
+      const isLowStock = distributed_list.total_quantity < 10;
     const details = data.details_id_ref;
      const work_details = data.work_id_ref;
-     const navigate=useNavigate()
-    console.log(details);
-    const view_handler=()=>{
-        navigate(data._id)
-    }
+
+
+  
+ 
     return (
         <Card className="w-full">
             <CardHeader className="flex justify-between items-center">
@@ -56,7 +62,7 @@ function InventryDetails_max_render({ data }: any) {
                 <div className="flex justify-between">
                     <span className="text-sm text-default-500">Available Quantity</span>
                     <span className="font-semibold">
-                        {data.avaliable_quantity}
+                        {distributed_list.total_quantity}
                     </span>
                 </div>
 
@@ -96,8 +102,9 @@ function InventryDetails_max_render({ data }: any) {
                     </span>
                 </div>
              <Divider />  
-             <div className='flex justify-end'>
-                <Button onPress={view_handler}>View</Button>
+             <div className='flex justify-end gap-2'>
+                <BarcodeGeneratorModalPopup distributed_list={distributed_list} range={details.range}  barcode_string='200-2-4-25'/>
+                {/* <Button onPress={view_handler}>View</Button> */}
             </div> 
             </CardBody>
             

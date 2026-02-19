@@ -17,7 +17,8 @@ const presetApi = (route: string) => {
 
 
 export const work_api_service = {
-    ...presetApi('work')
+    ...presetApi('work'),
+
 }
 export const worker_api_service = {
     ...presetApi('worker')
@@ -46,6 +47,7 @@ export const work_status_record_api_service = {//action like assign,submission a
     submitted_work_status_list: async (data: api_arg_type) => await Axios.get(baseurl + '/work_status_recored/work/submitted/' + data.id, { headers: headerFunctions() }),
     worker_work_list: async (data: api_arg_type) => await Axios.get(baseurl + '/work_status_recored/worker_work_list/' + data.id, { headers: headerFunctions() }),
     update_work_worker_unit_rate: async (data: api_arg_type) => await Axios.put(baseurl + '/work_status_recored/update_work_worker_unit_rate/' + data.id, data.data, { headers: headerFunctions() }),
+    range_match: async (data: api_arg_type) => await Axios.get(baseurl + '/work_status_recored/range-match/' + data.id, { headers: headerFunctions() }),
 }
 
 // inventry
@@ -63,7 +65,10 @@ export const customer_api_service = {
     credit_balance: async (data: api_arg_type) => await Axios.post(baseurl + '/customer/credit_amount', data.data, { headers: headerFunctions() }),
 }
 
-
+export const compnay_api_service = {
+    ...presetApi('company'),
+    credit_balance: async (data: api_arg_type) => await Axios.post(baseurl + '/customer/credit_amount', data.data, { headers: headerFunctions() }),
+}
 //invoice
 export const invoice_api_service = {
     ...presetApi('invoice'),
