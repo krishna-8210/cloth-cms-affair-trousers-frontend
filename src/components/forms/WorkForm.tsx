@@ -21,7 +21,6 @@ const update_list_handler = (list: any[], updated_data: any) =>
 
 const AssignFormComponent = ({ item_data, update_item }: any) => {
     const item_status = item_data?.status
-
     const [workerlist, setWorkerlist] = useState<datalist_type>({ list: [], status: 'loaded', loading: false })
     const [additional_quantity, set_additional_quantity] = useState<number>(0);
     const submit_handler = async (formdata: any) => {
@@ -135,7 +134,7 @@ const SubmissionFormComponent = ({ item_data, update_item }: any) => {
                 }, id: '', query: ''
             }, { toast_display: true })
             if (resp.status) {
-update_item(resp.data)
+                update_item(resp.data)
             }
 
         } catch (error) {
@@ -172,8 +171,6 @@ update_item(resp.data)
     useEffect(() => {
         worker_details_loader()
         //load worker details
-
-
     }, [])
 
 
@@ -239,10 +236,9 @@ update_item(resp.data)
 type selected_color_type = {
 
 }
-const CompleteStatusFormComponent = ({ item_data,update_item }: any) => {
+const CompleteStatusFormComponent = ({ item_data, update_item }: any) => {
     const item_status = item_data?.status;
     const range_number = item_data.details.range;
-
     const [pre_quantity, set_pre_quantity] = useState<number>(0)
     const avaliable_quantity = item_status.final_quantity
     const [color_list, set_color_list] = useState({ list: [], status: 'loading' })
@@ -278,7 +274,7 @@ const CompleteStatusFormComponent = ({ item_data,update_item }: any) => {
 
             }, { toast_display: true })
             if (resp.status) {
-update_item(resp.data)
+                update_item(resp.data)
             }
 
         } catch (error) {
@@ -383,7 +379,7 @@ update_item(resp.data)
                         })
                         // console.log(e);
                         if (!is_already_added) {
-                            return <AutocompleteItem onPress={() => { set_selected_color((x:any) => [...x, e]) }} aria-label='itt' key={e.key}>
+                            return <AutocompleteItem onPress={() => { set_selected_color((x: any) => [...x, e]) }} aria-label='itt' key={e.key}>
                                 {e.name}
                             </AutocompleteItem>
                         }
