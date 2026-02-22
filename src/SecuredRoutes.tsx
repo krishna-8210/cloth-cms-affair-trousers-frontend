@@ -27,6 +27,8 @@ import CreateReturnInvoiceFormPopup from "./components/forms/CreateReturnInvoice
 import InventryListPage from "./pages/Inventry/InventryListPage";
 import CompnayCreateUpdateFormPopup from "./components/CompnayCreateUpdateFormPopup";
 import SettingDefaultPage from "./pages/setting/SettingDefaultPage";
+import AgentTransactionTablePage from "./pages/agents/AgentTransactionTablePage";
+import AgentIncentiveTablePage from "./pages/agents/AgentIncentiveTablePage";
 
 
 
@@ -45,8 +47,8 @@ function SecuredRoutes() {
           topnavItems={[
             { id: 2, label: '', link: 'list', type: 'popup', element: <CreateWorksForm /> },
             { id: 3, label: '', link: 'list', type: 'popup', element: <CreateColorFormPopup /> }
-          
-          
+
+
           ]
           }
         />} path="/works"
@@ -64,7 +66,7 @@ function SecuredRoutes() {
           }
         />} path="/workers"
         >
-          <Route element={<WorkerDefaultPage />} index />     
+          <Route element={<WorkerDefaultPage />} index />
           <Route element={<WorkerDetailsPage />} path=":worker_id" />
           <Route element={<WorkerTransactionPage />} path=":worker_id/transactions" />
         </Route>
@@ -81,7 +83,7 @@ function SecuredRoutes() {
           title={"Customers"}
           topnavItems={[
             { id: 1, label: '', link: 'list', type: 'popup', element: <CreateCustomerFormPopup /> },
-                 { id: 1, label: '', link: 'list', type: 'popup', element: <BarcodeGenerateForm /> },
+            // { id: 1, label: '', link: 'list', type: 'popup', element: <BarcodeGenerateForm /> },
           ]}
         />} path="/customers"
         >
@@ -97,6 +99,8 @@ function SecuredRoutes() {
         />} path="/agent" >
           <Route element={<AgentDefaultPage />} index />
           <Route path=":agent_id" element={<AgentDetailsPage />} />
+          <Route path=":agent_id/incentives" element={<AgentIncentiveTablePage />} />
+          <Route path=":agent_id/transactions" element={<AgentTransactionTablePage />} />
         </Route>
         {/* invoices */}
         <Route element={<MainLayout
@@ -111,15 +115,15 @@ function SecuredRoutes() {
 
         </Route>
 
-              <Route element={<MainLayout
+        <Route element={<MainLayout
           title={"Setting"}
           topnavItems={[
-           
+
           ]}
         />} path="/setting" >
           <Route element={<SettingDefaultPage />} index />
-    
-          
+
+
         </Route>
         {/* 
 

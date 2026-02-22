@@ -24,8 +24,8 @@ function DeleteCustomerFormPopup({ customer_name, customer_id }: any) {
   return (
     <ModalFormPupup submit_handler={deleteHandler} modal_title='customer Delete' button_title='Delete' button_classname='bg-danger-300 h-8'>
      <div>Customer Name : {customer_name}</div>
-     {customer_id}
-      <Input name='customer_name' />
+      <Input placeholder='Customer name' label='Cutomer name' name='customer_name' />
+      <span>Note: if name match then  delete will done</span>
     </ModalFormPupup>
   )
 }

@@ -16,7 +16,6 @@ function TransactionTable({ id }: any) {
             key: "_id",
             label: "Id",
         },
-        
         {
             key: "amount",
             label: "Amount",
