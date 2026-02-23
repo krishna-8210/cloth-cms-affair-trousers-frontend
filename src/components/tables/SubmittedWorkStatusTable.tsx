@@ -4,6 +4,8 @@ import React, { useState } from 'react'
 import FormUi from '../ui/FormUi';
 import { work_status_record_api_service } from '@/services/mixServices';
 import { dataDetails_type } from '@/types';
+import { dateFormat } from '@/libs/mix';
+import { useNavigate } from 'react-router-dom';
 
 
 const Update_form = ({ data }: any) => {
@@ -18,9 +20,9 @@ const Update_form = ({ data }: any) => {
     const submit_handler = async (form_data: any) => {
         try {
             console.log(form_data)
-            const resp = await responseHandler(work_status_record_api_service.update_work_worker_unit_rate, { id: data._id, data: form_data, query: 's' },{toast_display:true});
+            const resp = await responseHandler(work_status_record_api_service.update_work_worker_unit_rate, { id: data._id, data: form_data, query: 's' }, { toast_display: true });
             console.log(resp);
-            
+
         } catch (error) {
             console.log(error);
         }
@@ -99,7 +101,7 @@ const UpdatePricePopup = ({ data }: any) => {
 
 // table_for='worker' ,work, etc
 function SubmittedWorkStatusTable({ list, table_for = 'work' }: any) {
-
+    const navigate=useNavigate()
     const submited_list = list.filter((e: any) => e.current_status == 'submitted');
 
     const columns_for_work = [
@@ -112,7 +114,7 @@ function SubmittedWorkStatusTable({ list, table_for = 'work' }: any) {
             label: "Worker name",
         },
         {
-            key: "createdAt",
+            key: "custom_date",
             label: "Date",
         },
         {
@@ -147,11 +149,11 @@ function SubmittedWorkStatusTable({ list, table_for = 'work' }: any) {
             label: "Status Id",
         },
         {
-            key: "worker_lot_number",
+            key: "work_lot_number",
             label: "Work Lot No.",
         },
         {
-            key: "createdAt",
+            key: "custom_date",
             label: "Date",
         },
         {
@@ -203,10 +205,18 @@ function SubmittedWorkStatusTable({ list, table_for = 'work' }: any) {
                                     )}
 
                                     {column.key === "worker_name" && (
-                                        <div>{item?.assigned_worker_id_ref?.name}</div>
+                                        <div onClick={()=>navigate(`/workers/${item?.assigned_worker_id_ref?._id}`)} className='capitalize cursor-pointer'>{item?.assigned_worker_id_ref?.name}</div>
+                                        //  <Transaction_details_popup transaction_id={item._id} />
+                                    )}
+                                      {column.key === "work_lot_number" && (
+                                        <div onClick={()=>navigate(`/works/${item?.work_id_ref?._id}`)} className='capitalize cursor-pointer'>{item?.work_id_ref?.lot_number}</div>
                                         //  <Transaction_details_popup transaction_id={item._id} />
                                     )}
 
+                                    {column.key === "custom_date" && (
+                                       dateFormat(item?.date || item?.createdAt)?.date
+                                        //  <Transaction_details_popup transaction_id={item._id} />
+                                    )}
                                     {column.key === "worker_lot_number" && (
                                         <div>{item?.work_id_ref?.lot_number}</div>
                                         //  <Transaction_details_popup transaction_id={item._id} />

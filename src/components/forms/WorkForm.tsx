@@ -4,13 +4,14 @@ import FormUi from '../ui/FormUi'
 import { Autocomplete, AutocompleteItem, Button, Chip, Input, Select, SelectItem, Spinner, Switch, Textarea, useDisclosure, useSelect } from '@heroui/react'
 import { responseHandler } from '@/libs/api_handle'
 import { color_api_service, work_api_service, work_status_record_api_service, worker_api_service } from '@/services/mixServices'
-import { api_arg_type, dataDetails_type, datalist_type, type_ApiState } from '@/types'
+import { api_arg_type, dataDetails_type, datalist_type, type_ApiState, type_ApiState2 } from '@/types'
 import { color } from 'framer-motion'
 import { libs_distributed_json_hander } from '@/libs/mix'
 import { div } from 'framer-motion/client'
 import { prepareAutoBatched } from '@reduxjs/toolkit'
 import { useDispatch, useSelector } from 'react-redux'
 import { work_list_update_reducer } from '@/redux/DatalistSlice'
+import { CheckCheck } from 'lucide-react'
 
 const update_list_handler = (list: any[], updated_data: any) =>
     list.map((item: any) =>
@@ -19,10 +20,34 @@ const update_list_handler = (list: any[], updated_data: any) =>
             : item
     );
 
+const StatusUpdateCpm = ({ children, submit_status }: any) => {
+
+    return <>
+        {submit_status.success ?
+            <div className='flex items-center min-h-96 justify-center flex-col gap-2'>
+                <div className='border text-5xl p-2 rounded-full border-success'>
+                    <CheckCheck className='text-success' size={150} />
+
+                </div>
+                <div className='text-xl text-success'>{submit_status.msg || 'Done'}</div>
+            </div>
+            :
+            children
+        }
+
+    </>
+}
+
 const AssignFormComponent = ({ item_data, update_item }: any) => {
     const item_status = item_data?.status
     const [workerlist, setWorkerlist] = useState<datalist_type>({ list: [], status: 'loaded', loading: false })
     const [additional_quantity, set_additional_quantity] = useState<number>(0);
+    const [submit_status, set_submit_status] = useState<type_ApiState2>({
+        data: null,
+        loading: false,
+        success: false,
+        msg: ''
+    })
     const submit_handler = async (formdata: any) => {
         try {
             console.log(item_data)
@@ -37,7 +62,9 @@ const AssignFormComponent = ({ item_data, update_item }: any) => {
             }, { toast_display: true })
 
             if (resp.status) {
-                update_item(resp.data)
+                update_item(resp.data);
+                set_submit_status(e => ({ ...e, success: true, msg: 'Assigned' }))
+
             }
             console.log(resp);
         } catch (error) {
@@ -54,35 +81,37 @@ const AssignFormComponent = ({ item_data, update_item }: any) => {
         })()
     }, [])
     return <>
+        <StatusUpdateCpm submit_status={submit_status}>
+            <FormUi submit_handler={submit_handler} >
+                <Select isRequired name='selected_worker' label='Select worker'>
+                    {workerlist.list.map((e: any) => {
+                        return <SelectItem key={e._id} className=''>
+                            {e.name}
+                        </SelectItem>
+                    })}
+                </Select>
 
-        <FormUi submit_handler={submit_handler} >
-            <Select isRequired name='selected_worker' label='Select worker'>
-                {workerlist.list.map((e: any) => {
-                    return <SelectItem key={e._id} className=''>
-                        {e.name}
-                    </SelectItem>
-                })}
-            </Select>
+                <Input isRequired type='number' onValueChange={(data) => {
 
-            <Input isRequired type='number' onValueChange={(data) => {
-
-                set_additional_quantity(Number(data))
-            }} label='Additional quantity' name='additional_quatity' />
-            <Input isRequired label='Per unit price' type='number' name='price_per_piece' />
-            <Input label='Notes' name='notes' />
-            <Input label='Date' type='date' name='custom_date' />
-            <div>
+                    set_additional_quantity(Number(data))
+                }} label='Additional quantity' name='additional_quatity' />
+                <Input isRequired label='Per unit price' type='number' name='price_per_piece' />
+                <Input label='Notes' name='notes' />
+                <Input label='Date' type='date' name='custom_date' />
                 <div>
-                    <span>Pre Quantity : </span>
-                    <span>{Number(item_data?.status?.final_quantity)}</span>
-                </div>
-                <div>
-                    <span>Total Quantity : </span>
-                    <span>{Number(item_data?.status?.final_quantity) + additional_quantity}</span>
-                </div>
+                    <div>
+                        <span>Pre Quantity : </span>
+                        <span>{Number(item_data?.status?.final_quantity)}</span>
+                    </div>
+                    <div>
+                        <span>Total Quantity : </span>
+                        <span>{Number(item_data?.status?.final_quantity) + additional_quantity}</span>
+                    </div>
 
-            </div>
-        </FormUi>
+                </div>
+            </FormUi>
+        </StatusUpdateCpm>
+
 
 
 
@@ -99,7 +128,12 @@ const WorkerDetails = ({ details }: any) => {
 }
 
 const SubmissionFormComponent = ({ item_data, update_item }: any) => {
-
+    const [submit_status, set_submit_status] = useState<type_ApiState2>({
+        data: null,
+        loading: false,
+        success: false,
+        msg: ''
+    });
     const [assigned_worker_details, set_assigned_worker_details] = useState<dataDetails_type>({ loading: true, status: 'loading', data: null })
     const dispatch = useDispatch()
     const item_status = item_data?.status;
@@ -122,9 +156,6 @@ const SubmissionFormComponent = ({ item_data, update_item }: any) => {
 
     const submit_handler = async (formdata: any) => {
         try {
-            console.log(formdata);
-
-
             const resp = await responseHandler(work_status_record_api_service.create, {
                 data: {
                     ...formdata,
@@ -134,7 +165,8 @@ const SubmissionFormComponent = ({ item_data, update_item }: any) => {
                 }, id: '', query: ''
             }, { toast_display: true })
             if (resp.status) {
-                update_item(resp.data)
+                update_item(resp.data);
+                set_submit_status(e => ({ ...e, success: true, msg: 'Submitted' }))
             }
 
         } catch (error) {
@@ -175,24 +207,25 @@ const SubmissionFormComponent = ({ item_data, update_item }: any) => {
 
 
     return <>
+        <StatusUpdateCpm submit_status={submit_status} >
 
-        <FormUi submit_handler={submit_handler}>
-            <Chip>Submission Form</Chip>
-            <div className='border-2 border-default w-full p-2 rounded-xl'>
-                <div>
-                    Worker Details
+            <FormUi submit_handler={submit_handler}>
+                <Chip>Submission Form</Chip>
+                <div className='border-2 border-default w-full p-2 rounded-xl'>
+                    <div>
+                        Worker Details
+                    </div>
+                    {assigned_worker_details.data ? <WorkerDetails details={assigned_worker_details.data} /> : <Spinner />}
+
                 </div>
-                {assigned_worker_details.data ? <WorkerDetails details={assigned_worker_details.data} /> : <Spinner />}
 
-            </div>
-
-            <Input defaultValue='0' label='Rejected Quantity' type='number' onValueChange={handler_rejected_quantity} name='rejected_quantity' placeholder='Rejected Quantity' />
-            <div>
-                <span>Final Total Quantity : </span>
-                <span>{Number(final_quantity) - rejected_quantity}</span>
-            </div>
-            {/* price per piece */}
-            {/* <div className='border border-default p-2 w-full rounded-xl flex flex-col gap-1'>
+                <Input defaultValue='0' label='Rejected Quantity' type='number' onValueChange={handler_rejected_quantity} name='rejected_quantity' placeholder='Rejected Quantity' />
+                <div>
+                    <span>Final Total Quantity : </span>
+                    <span>{Number(final_quantity) - rejected_quantity}</span>
+                </div>
+                {/* price per piece */}
+                {/* <div className='border border-default p-2 w-full rounded-xl flex flex-col gap-1'>
                 
                 <Switch onValueChange={(e)=>{set_is_update_price_per_piece_enabled(e)}}  name='is_update_price_per_piece'>Update Price per Piece</Switch>
                 {is_update_price_per_piece_enabled?<Input  isReadOnly={!is_update_price_per_piece_enabled}  labelPlacement='outside' placeholder='Price per Piece'/>
@@ -200,42 +233,42 @@ const SubmissionFormComponent = ({ item_data, update_item }: any) => {
                 <Input isReadOnly={!is_update_price_per_piece_enabled} labelPlacement='outside' placeholder='Price per Piece ss'/>
                 }
             </div> */}
-            <div className='flex flex-col gap-2 items-end '>
-                <div className=' flex items-center'><span>{'('}{(Number(final_quantity) - rejected_quantity)}x{temp_price_per_piece}{')'}</span>
-                    <span><Input value={`${paymentlist.calculated_payment}`} label='Calculated Payment' labelPlacement='outside-left' /></span>
+                <div className='flex flex-col gap-2 items-end '>
+                    <div className=' flex items-center'><span>{'('}{(Number(final_quantity) - rejected_quantity)}x{temp_price_per_piece}{')'}</span>
+                        <span><Input value={`${paymentlist.calculated_payment}`} label='Calculated Payment' labelPlacement='outside-left' /></span>
 
+
+                    </div>
+                    <div className='flex  '>
+                        <Input type='number' defaultValue='0' onValueChange={(amount: any) => {
+                            set_paymentlist(e => ({ ...e, additional_payment: amount }))
+                        }} label='Additinal Payment' labelPlacement='outside-left' />
+                    </div>
+                    <div>
+                        <Input type='number' defaultValue='0' onValueChange={(amount: any) => {
+                            set_paymentlist(e => ({ ...e, additional_cut: amount }))
+                        }} label='Payment Cut' labelPlacement='outside-left' />
+                    </div>
+                    <div>
+                    
+                    </div>
+                    <div className='flex'>
+                            <Input type='date' name={'date'} />
+                        <Input isReadOnly value={`${(Number(paymentlist.calculated_payment) + Number(paymentlist.additional_payment) - Number(paymentlist.additional_cut))}`} label='Final Payment' labelPlacement='outside-left' />
+
+                    </div>
 
                 </div>
-                <div className='flex  '>
-                    <Input type='number' defaultValue='0' onValueChange={(amount: any) => {
-                        set_paymentlist(e => ({ ...e, additional_payment: amount }))
-                    }} label='Additinal Payment' labelPlacement='outside-left' />
-                </div>
-                <div>
-                    <Input type='number' defaultValue='0' onValueChange={(amount: any) => {
-                        set_paymentlist(e => ({ ...e, additional_cut: amount }))
-                    }} label='Payment Cut' labelPlacement='outside-left' />
-                </div>
-                <div>
-                    <Input isReadOnly value={`${(Number(paymentlist.calculated_payment) + Number(paymentlist.additional_payment) - Number(paymentlist.additional_cut))}`} label='Final Payment' labelPlacement='outside-left' />
-
-                </div>
-
-            </div>
-            <Textarea label='Notes' name='notes' />
+                <Textarea label='Notes' name='notes' />
 
 
-        </FormUi>
-
-
-
+            </FormUi>
+        </StatusUpdateCpm>
     </>
 }
 
 
-type selected_color_type = {
 
-}
 const CompleteStatusFormComponent = ({ item_data, update_item }: any) => {
     const item_status = item_data?.status;
     const range_number = item_data.details.range;
@@ -244,6 +277,12 @@ const CompleteStatusFormComponent = ({ item_data, update_item }: any) => {
     const [color_list, set_color_list] = useState({ list: [], status: 'loading' })
     const [selected_color, set_selected_color] = useState<any>([])
     const [range_match_status, set_range_match_status] = useState<type_ApiState>({ data: null, loading: false })
+    const [submit_status, set_submit_status] = useState<type_ApiState2>({
+        data: null,
+        loading: false,
+        success: false,
+        msg: ''
+    });
     const submit_handler = async (formdata: any) => {
 
         try {
@@ -274,7 +313,8 @@ const CompleteStatusFormComponent = ({ item_data, update_item }: any) => {
 
             }, { toast_display: true })
             if (resp.status) {
-                update_item(resp.data)
+                update_item(resp.data);
+                set_submit_status(e => ({ ...e, success: true, msg: 'Work Completed and added in inventry' }));
             }
 
         } catch (error) {
@@ -323,86 +363,88 @@ const CompleteStatusFormComponent = ({ item_data, update_item }: any) => {
 
     return <>
 
-        <FormUi submit_handler={submit_handler}>
-            <Button onPress={() => console.log(range_match_status)}>test</Button>
-            <Chip>Completed: Work to Inventry</Chip>
-            <div>Note: This Action will complete the work and add the inventry which then ready to sell</div>
-            <div>
+        <StatusUpdateCpm submit_status={submit_status} >
+            <FormUi submit_handler={submit_handler}>
+                <Button onPress={() => console.log(range_match_status)}>test</Button>
+                <Chip>Completed: Work to Inventry</Chip>
+                <div>Note: This Action will complete the work and add the inventry which then ready to sell</div>
+                <div>
 
-                <div>
-                    Inventry Match Status  {range_match_status.loading ? <Spinner size='sm' /> : <Chip>{range_match_status?.data?.match_status}</Chip>}
-                </div>
-                <div>
-                    Current Quantity : <Chip size='sm'>{item_data?.status?.final_quantity}</Chip>
-                </div>
-                {range_match_status?.data?.match_status == 'matched' &&
-                    <div className='flex flex-col gap-1 mt-1'>
-                        <div>Previous Quantity :  <Chip size='sm'>{pre_quantity}</Chip> { }</div>
-                        <div>Total Quantity :  <Chip size='sm'>{pre_quantity + item_data?.status?.final_quantity}</Chip> { }</div>
+                    <div>
+                        Inventry Match Status  {range_match_status.loading ? <Spinner size='sm' /> : <Chip>{range_match_status?.data?.match_status}</Chip>}
                     </div>
-
-                }
-
-
-                {/* {console.log(item_data)} */}
-            </div>
-
-            <div>
-                {
-                    selected_color.map((item: any, n: number) => {
-                        return <div className='grid grid-cols-3 m-1 '>
-                            <div>Key: {item?.key}</div>
-                            <div>Name: {item?.name}</div>
-                            <div><Input type='number' defaultValue={item.quantity || 0} min={0}
-                                onChange={(e) => {
-                                    const qn = e.target.value;
-                                    console.log(qn)
-                                    set_selected_color((c: any) => {
-                                        const list = [...c];
-                                        list[n].quantity = Number(qn);
-                                        return list;
-                                    })
-                                }} placeholder='quantity' size='sm' /></div>
+                    <div>
+                        Current Quantity : <Chip size='sm'>{item_data?.status?.final_quantity}</Chip>
+                    </div>
+                    {range_match_status?.data?.match_status == 'matched' &&
+                        <div className='flex flex-col gap-1 mt-1'>
+                            <div>Previous Quantity :  <Chip size='sm'>{pre_quantity}</Chip> { }</div>
+                            <div>Total Quantity :  <Chip size='sm'>{pre_quantity + item_data?.status?.final_quantity}</Chip> { }</div>
                         </div>
-                    })
-                }
-            </div>
-            <Autocomplete size='sm' label='Select Color' onSelectionChange={(e) => { console.log(e) }}>
-                <>
-                    {Array.isArray(color_list.list) && color_list.list.map((e: any, n) => {
-                        let is_already_added = false;
-                        selected_color.map((color: any) => {
-                            if (e.key == color.key) {
-                                is_already_added = true;
-                            }
 
+                    }
+
+
+                    {/* {console.log(item_data)} */}
+                </div>
+
+                <div>
+                    {
+                        selected_color.map((item: any, n: number) => {
+                            return <div className='grid grid-cols-3 m-1 '>
+                                <div>Key: {item?.key}</div>
+                                <div>Name: {item?.name}</div>
+                                <div><Input type='number' defaultValue={item.quantity || 0} min={0}
+                                    onChange={(e) => {
+                                        const qn = e.target.value;
+                                        console.log(qn)
+                                        set_selected_color((c: any) => {
+                                            const list = [...c];
+                                            list[n].quantity = Number(qn);
+                                            return list;
+                                        })
+                                    }} placeholder='quantity' size='sm' /></div>
+                            </div>
                         })
-                        // console.log(e);
-                        if (!is_already_added) {
-                            return <AutocompleteItem onPress={() => { set_selected_color((x: any) => [...x, e]) }} aria-label='itt' key={e.key}>
-                                {e.name}
-                            </AutocompleteItem>
-                        }
-                    })}
-                </>
-            </Autocomplete>
-            <Input label='Notes' name='notes' />
-        </FormUi>
-        <div>
+                    }
+                </div>
+                <Autocomplete size='sm' label='Select Color' onSelectionChange={(e) => { console.log(e) }}>
+                    <>
+                        {Array.isArray(color_list.list) && color_list.list.map((e: any, n) => {
+                            let is_already_added = false;
+                            selected_color.map((color: any) => {
+                                if (e.key == color.key) {
+                                    is_already_added = true;
+                                }
 
-        </div>
+                            })
+                            // console.log(e);
+                            if (!is_already_added) {
+                                return <AutocompleteItem onPress={() => { set_selected_color((x: any) => [...x, e]) }} aria-label='itt' key={e.key}>
+                                    {e.name}
+                                </AutocompleteItem>
+                            }
+                        })}
+                    </>
+                </Autocomplete>
+                <Input label='Notes' name='notes' />
+            </FormUi>
+        </StatusUpdateCpm>
+
+
 
 
     </>
 }
 
-function WorkActionsForm({ status, item_data }: any) {
+function WorkActionsForm({ status, item_data, updateData = () => { } }: any) {
 
     const dispatch = useDispatch();
     const worklist_slice = useSelector((e: any) => e.datalist_slice.work.list);
     const update_item = (updated_data: any) => {
         const updated_list: any = update_list_handler(worklist_slice, updated_data);
-        dispatch(work_list_update_reducer(updated_list))
+        dispatch(work_list_update_reducer(updated_list));
+        updateData(updated_data);
     }
     return (
         <>

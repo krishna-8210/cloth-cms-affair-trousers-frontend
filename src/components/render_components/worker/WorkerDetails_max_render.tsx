@@ -1,3 +1,4 @@
+import BalanceShow from '@/components/BalanceShow';
 import WorkerCreditDebitFormPupup from '@/components/forms/WorkerCreditDebitFormPupup';
 import { Button, Card, CardBody, CardHeader } from '@heroui/react'
 import React from 'react'
@@ -18,8 +19,8 @@ function WorkerDetails_max_render({ data }: any) {
                 <span>{data.name}</span>
             </div>
             <div className='flex gap-2' >
-               <WorkerCreditDebitFormPupup transaction_type='debit'/>
-                <WorkerCreditDebitFormPupup transaction_type='credit'/>
+                <WorkerCreditDebitFormPupup transaction_type='debit' />
+                <WorkerCreditDebitFormPupup transaction_type='credit' />
                 <Button size='sm' onClick={transaction_handler} >All Transactions</Button>
             </div>
 
@@ -40,8 +41,8 @@ function WorkerDetails_max_render({ data }: any) {
                     <span>{role.title}</span>
                 </div>
             </div>
-            <div className='w-full border w-full p-5 rounded-xl border-default mt-2'>
-                <div>Balance: {data?.balance_amount} rs</div>
+            <div className='w-96 border w-full p-5 rounded-xl border-default mt-2'>
+                <div className='flex gap-2'>Balance:<BalanceShow balance={data?.balance_amount || 0} /></div>
             </div>
         </CardBody>
     </Card>
