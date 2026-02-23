@@ -9,7 +9,7 @@ import { responseHandler } from '@/libs/api_handle';
 import { work_api_service } from '@/services/mixServices';
 import { CustomToast } from '../ui/CustomToast';
 
-function WorkDetailsCpm({ work_data, n ,is_max_view=false}: any) {
+function WorkDetailsCpm({ work_data, n ,is_max_view=false,updateData}: any) {
     const [seltected_status, set_seletced_status] = useState<String>('initiated')
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const worklist_slice = useSelector((e: any) => e.datalist_slice.work.list);
@@ -137,7 +137,7 @@ function WorkDetailsCpm({ work_data, n ,is_max_view=false}: any) {
                                 <>
                                     <ModalHeader>Status Update</ModalHeader>
                                     <ModalBody className=''>
-                                        <WorkActionsForm item_data={data} status={seltected_status} />
+                                        <WorkActionsForm updateData={updateData} item_data={data} status={seltected_status} />
                                     </ModalBody>
                                     <ModalFooter>
                                         <Button color="danger" variant="light" onPress={onClose}>

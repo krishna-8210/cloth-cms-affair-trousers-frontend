@@ -2,7 +2,7 @@ import { Button, Card, CardBody, CardHeader, Divider, Popover, PopoverContent, P
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
 import CustomerCreditFormPupup from '../forms/CustomerCreditFormPupup';
-import { CircleEllipsis, Dot, Ellipsis, Menu } from 'lucide-react';
+import { CircleEllipsis, Dot, Ellipsis, EllipsisVertical, Menu } from 'lucide-react';
 import DeleteCustomerFormPopup from '../forms/customer/DeleteCustomerFormPopup';
 import UpateCustomerFormPopup from '../forms/customer/UpateCustomerFormPopup';
 import { div } from 'framer-motion/client';
@@ -32,12 +32,12 @@ function CustomerDetails_max({ data, setData }: any) {
                         </div>
 
                     </div>
-                    <div className='flex gap-2' >
+                    <div className='flex gap-2 items-center' >
                         <CustomerCreditFormPupup transaction_type='credit' />
                         <Button size='sm' onClick={transaction_handler} >All Transactions</Button>
                         <Popover placement="bottom">
-                            <PopoverTrigger>
-                                <Button size='sm' >Action</Button>
+                            <PopoverTrigger className='outline-none'>
+                                   <EllipsisVertical/>  
                             </PopoverTrigger>
                             <PopoverContent className='bg-default-100'>
                                 <div className="  flex flex-col gap-2">

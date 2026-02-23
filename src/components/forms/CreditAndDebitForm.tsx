@@ -20,7 +20,7 @@ function CreditAndDebitForm({ transaction_type }: any) {
                 type="date"
                 defaultValue={today}
             />
-            <Textarea isRequired label='Notes' name='notes' placeholder='Notes' />
+            <Textarea  label='Notes' name='notes' placeholder='Notes' />
         </>
     )
 }

@@ -32,6 +32,12 @@ export type type_ApiState = {
   data: any | null,
   loading:boolean,
 }
+export type type_ApiState2 = {
+  data: any | null,
+  loading:boolean,
+  success:boolean,
+  msg:string
+}
 export type dataDetails_type = {
   data: any | null,
   status: 'loaded' | 'loading',

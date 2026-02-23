@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 
 
 
-function DetailsPageTemplate({ details_api,setData, id, Render_component, children }: any) {
+function DetailsPageTemplate({ details_api,setData, id, Render_component, children,is_max_view=false }: any) {
     const [details_data, set_details_data] = useState<dataDetails_type>({ data: {}, loading: true, status: 'loading' });
     const [main_data,setMainData]=useState({});
     const details_loader = async () => {
@@ -37,7 +37,7 @@ function DetailsPageTemplate({ details_api,setData, id, Render_component, childr
         <>
             <div className='w-full  h-full overflow-scroll'>
                 {details_data.loading && <Spinner />}
-                {!details_data.loading && <Render_component setData={set_details_data} data={details_data.data} />}
+                {!details_data.loading && <Render_component is_max_view={is_max_view} setData={set_details_data} data={details_data.data} />}
                 {children}
             </div>
         </>

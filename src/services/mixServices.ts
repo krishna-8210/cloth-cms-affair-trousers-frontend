@@ -78,8 +78,11 @@ export const invoice_api_service = {
 
 //agent
 export const agent_api_service = {
-    ...presetApi('agent')
-}
+    ...presetApi('agent'),
+        incentive_list: async (data: api_arg_type) => await Axios.get(baseurl + '/agent/incentive-list/' + data.id+'?'+data.query, { headers: headerFunctions() }),
+        debit_money: async (data: api_arg_type) => await Axios.post(baseurl + '/agent/debit-money/' + data.id,data.data ,{ headers: headerFunctions() }),
+
+    }
 export const color_api_service = {
     ...presetApi('color')
 }

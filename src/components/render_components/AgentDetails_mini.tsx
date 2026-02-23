@@ -1,8 +1,16 @@
-import { Button, Card, CardBody, CardHeader, Divider } from '@heroui/react'
+import { Button, Card, CardBody, CardHeader, Divider, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Popover, PopoverContent, PopoverTrigger } from '@heroui/react'
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
+import AgentDebitMoneyFormPopup from '../forms/agent/AgentDebitMoney';
+import CreateAgentFormPopup from '../forms/CreateAgentFormPopup';
+import BalanceShow from '../BalanceShow';
+import { EllipsisVertical } from 'lucide-react';
+import UpateCustomerFormPopup from '../forms/customer/UpateCustomerFormPopup';
+import DeleteCustomerFormPopup from '../forms/customer/DeleteCustomerFormPopup';
+import UpdateAgentIncentiveFormPopup from '../forms/agent/UpdateAgentIncentiveFormPopup';
+import DeleteAgentFormPopup from '../forms/agent/DeleteAgentFormPopup';
 
-function AgentDetails_mini({ data }: any) {
+function AgentDetails_mini({ data, is_max_view }: any) {
     const details = data;
     const balance = data?.balance_id_ref;
     const navigate = useNavigate()
@@ -11,7 +19,7 @@ function AgentDetails_mini({ data }: any) {
     }
     return (
         <Card className="w-full">
-            <CardHeader className="flex justify-between items-center">
+            <CardHeader className="flex justify-between items-start">
                 <div >
                     <div className='flex items-center gap-2'>
                         <p className="">Name:</p>
@@ -26,6 +34,33 @@ function AgentDetails_mini({ data }: any) {
                         <p className="uppercase">{details?.incentive_percentage}%</p>
                     </div>
                 </div>
+                {is_max_view && <div className='flex gap-2 items-center'>
+                    <AgentDebitMoneyFormPopup agent_id={details._id} />
+                    <Button onPress={() => { navigate('transactions') }} size='sm'>Transactions</Button>
+                    <Button onPress={() => { navigate('incentives') }} size='sm'>Incentives</Button>
+                    <div>
+                   
+
+                          
+                                   
+                                <Popover placement="bottom" >
+                                    <PopoverTrigger className='outline-none'>
+                                          <EllipsisVertical/>  
+                                    </PopoverTrigger>
+                                    <PopoverContent className='bg-default-100'>
+                                        <div className="  flex flex-col gap-2">
+                                            <CreateAgentFormPopup pre_details={details} is_update={true} />
+                                            {/* <DeleteCustomerFormPopup customer_name={details?.name} customer_id={details?._id} /> */}
+
+                                            <DeleteAgentFormPopup details={details}/>
+                                        </div>
+                                    </PopoverContent>
+                                </Popover>
+                       
+                       
+                    </div>
+
+                </div>}
             </CardHeader>
             <Divider />
             <CardBody className="space-y-3">
@@ -48,7 +83,7 @@ function AgentDetails_mini({ data }: any) {
                 <div className="flex justify-between">
                     <span className="text-sm text-default-500">Avaliable amount</span>
                     <span className="font-semibold">
-                        {balance?.amount}
+                        <BalanceShow balance={balance?.amount} />
                     </span>
                 </div>
 
@@ -62,9 +97,12 @@ function AgentDetails_mini({ data }: any) {
                     </span>
                 </div>
                 <Divider />
-                <div className='flex justify-end'>
-                    <Button onPress={view_handler}>View</Button>
-                </div>
+                {!is_max_view &&
+                    <div className='flex justify-end'>
+                        <Button onPress={view_handler}>View</Button>
+                    </div>
+                }
+
             </CardBody>
 
         </Card>

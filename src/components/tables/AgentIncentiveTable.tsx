@@ -1,5 +1,5 @@
 import { responseHandler } from '@/libs/api_handle';
-import { invoice_api_service, transaction_api_service } from '@/services/mixServices';
+import { agent_api_service, invoice_api_service, transaction_api_service } from '@/services/mixServices';
 import { datalist_type } from '@/types';
 import { Button, Card, getKeyValue, Pagination, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Tooltip } from '@heroui/react';
 
@@ -11,8 +11,9 @@ import { div } from 'framer-motion/client';
 import { ArrowBigDown, ArrowDown, ArrowDown01, ArrowDownNarrowWide } from 'lucide-react';
 import InvoiceDownloadBtn from '../invoice/InvoiceDownloadBtn';
 import { dateFormat } from '@/libs/mix';
+import UpdateAgentIncentiveFormPopup from '../forms/agent/UpdateAgentIncentiveFormPopup';
 
-function InvoiceTable({ invoice_type = 'all_invoice_type' }: any) {
+function AgentIncentiveTable({ agent_id,limit=11 ,pagination_option=false}: any) {
     // const [is_loading_download_pdf, set_is_loading_download_pdf] = useState<string | null>(null);
     const [is_loading_view_pdf, set_is_loading_view_pdf] = useState<string | null>(null);
     const navigate = useNavigate();
@@ -22,11 +23,11 @@ function InvoiceTable({ invoice_type = 'all_invoice_type' }: any) {
     const columns = [
         {
             key: "invoice_id",
-            label: "Id",
+            label: "Invoice Id",
         },
 
         {
-            key: "total_billed_amount",
+            key: "incentive_amount_",
             label: "Amount",
         },
 
@@ -34,29 +35,20 @@ function InvoiceTable({ invoice_type = 'all_invoice_type' }: any) {
             key: "invoice_date",
             label: "Date",
         },
-        {
-            key: "invoice_type",
-            label: "Type",
-        },
-        {
-            key: "customer_id_ref",
-            label: "Customer Name",
-        },
+      
+       
         {
             key: "action",
             label: "Action",
         },
-        {
-            key: "pdf",
-            label: "Pdf",
-        },
+      
     ];
 
 
     const listLoader = async () => {
         console.log(page)
         try {
-            const resp_list = await responseHandler(invoice_api_service.list, { id: '', data: '', query: `page=${page}&limit=11&invoice_type=${invoice_type}` })
+            const resp_list = await responseHandler(agent_api_service.incentive_list, { id: agent_id, data: '', query: `page=${page}&limit=${limit||11}` })
 
             if (resp_list.status) {
                 if (Array.isArray(resp_list.data.list)) {
@@ -78,9 +70,11 @@ function InvoiceTable({ invoice_type = 'all_invoice_type' }: any) {
 
     return (
 
-        <Table aria-label="agent incentive list"
+        <Table title='sa' aria-label="agent incentive list"
+           
             bottomContent={
                 <div className="flex w-full justify-center">
+                    {pagination_option&&
                     <Pagination
                         className='p-2'
                         isCompact
@@ -91,6 +85,7 @@ function InvoiceTable({ invoice_type = 'all_invoice_type' }: any) {
                         total={pagination?.totalPages}
                         onChange={(page: any) => set_page(page)}
                     />
+            }
                 </div>
             }
         >
@@ -102,17 +97,20 @@ function InvoiceTable({ invoice_type = 'all_invoice_type' }: any) {
                     <TableRow key={item._id}>
                         {columns.map((column) => (
                             <TableCell key={column.key}>
-                                {column.key === "_id" && (
-                                    <Transaction_details_popup transaction_id={item._id} />
+                                {column.key === "invoice_id" && (
+                                    <Button size='sm' onPress={()=>{
+                                        navigate(`/Invoices/${item?.invoice_id_ref?._id}`)
+                                    }}>{   item?.invoice_id_ref?.invoice_id}</Button>
+                                
                                 )}
                                 {/* {column.key === "updated_balance"&& item.previous_balance && (
                                     item.transaction_type=='credit'?Math.round(Number(item.previous_balance)+Number(item.amount)):
                                     Math.round(Number(item.previous_balance)-Number(item.amount))
                                 )} */}
-                                {column.key === 'action' && (<Button onPress={() => navigate(item._id)} size='sm'>View</Button>)}
-                                {column.key === 'total_billed_amount' && (item?.billing_details.total_billed_amount)}
+                                {column.key === 'action' && <UpdateAgentIncentiveFormPopup incentive_details={item}/>}
+                                {column.key === 'incentive_amount_' && (item?.incentive_amount)}
                                 {column.key === 'pdf' && <InvoiceDownloadBtn invoice_id_props={item._id} />}
-                                {column.key === 'invoice_date' && dateFormat(item?.invoice_date).date}
+                                {column.key === 'invoice_date' && dateFormat(item?.invoice_id_ref?.invoice_date).date}
                                 {column.key === 'customer_id_ref' && <div className='cursor-pointer' onClick={() => {
                                     navigate(`/customers/${item?.customer_id_ref?._id}`)
                                 }}>
@@ -134,4 +132,4 @@ function InvoiceTable({ invoice_type = 'all_invoice_type' }: any) {
 }
 
 
-export default InvoiceTable
+export default AgentIncentiveTable
